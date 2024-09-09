@@ -4,6 +4,11 @@ pipeline {
       pollSCM '*/5 * * * *'
     }
     stages {
+      stage ('clean workspace') {
+        echo 'Cleaning workspace...'
+        cleanWs()
+        echo 'Cleaning done'
+      }
         stage('Build') {
             steps {
                 // 빌드 단계 명령어
