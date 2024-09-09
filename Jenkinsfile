@@ -8,27 +8,27 @@ pipeline {
             steps {
                 // 빌드 단계 명령어
                 echo 'Building..'
-                sh ```
+                sh '''
                   echo "doing build stuff..."
-                ```
+                '''
             }
         }
         stage('Test') {
             steps {
                 // 테스트 단계 명령어
                 echo 'Testing..'
-                sh ```
+                sh '''
                   echo "doing test stuff..."
-                ```
+                '''
             }
         }
         stage('Deploy') {
             steps {
                 // 배포 단계 명령어
                 echo 'Deploying....'
-                sh ```
+                sh '''
                   echo "doing delivery stuff..."
-                ```
+                '''
             }
         }
     }
