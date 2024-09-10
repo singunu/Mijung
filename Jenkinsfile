@@ -10,6 +10,8 @@ pipeline {
     environment {
         FRONTEND_DIR = './frontend'
         BACKEND_DIR = './backend/mijung'
+        FRONTEND_IMG = 'mijung_frontend'
+        BACKEND_IMG = 'mijung_backend'
     }
 
     triggers {
@@ -34,7 +36,7 @@ pipeline {
                 stage('BE Build') {
                     steps {
                         echo 'BE Building...'
-                        dir(${BACKEND_DIR}) {
+                        dir("${BACKEND_DIR}") {
                             sh 'chmod +x ./gradlew'
                             sh './gradlew clean build'
                         }
@@ -44,7 +46,7 @@ pipeline {
                 stage('FE Build') {
                     steps {
                         echo 'FE Building...'
-                        dir(${FRONTEND_DIR}) {
+                        dir("${FRONTEND_DIR}") {
                             sh 'npm install'
                             sh 'npm run build'
                         }
@@ -68,16 +70,22 @@ pipeline {
                         usernameVariable: 'DOCKER_USERNAME'
                 )]) {
                     stage('Docker Image build') {
-                        dir(${BACKEND_DIR}) {
+                        sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
+                        dir("${BACKEND_DIR}") {
                             echo 'Building BE docker image...'
-                            sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
-                            sh "docker build -t $DOCKER_USERNAME/mijung_backend:${env.BUILD_ID} ."
-                            sh "docker tag $DOCKER_USERNAME/mijung_backend:${env.BUILD_ID} $DOCKER_USERNAME/mijung_backend:latest"
-                            sh "docker push $DOCKER_USERNAME/mijung_backend:latest"
+                            sh "docker build -t $DOCKER_USERNAME/${BACKEND_IMG}:${env.BUILD_ID} ."
+                            sh "docker tag $DOCKER_USERNAME/${BACKEND_IMG}:${env.BUILD_ID} \
+                                $DOCKER_USERNAME/${BACKEND_IMG}:latest"
+                            sh "docker push $DOCKER_USERNAME/${BACKEND_IMG}:latest"
                             echo 'Building BE docker image complete.'
                         }
-                        dir(${FRONTEND_DIR}) {
+                        dir("${FRONTEND_DIR}") {
                             echo 'Building FE docker image...'
+                            sh "docker build -t $DOCKER_USERNAME/${FRONTEND_IMG}:${env.BUILD_ID} ."
+                            sh "docker tag $DOCKER_USERNAME/${FRONTEND_IMG}:${env.BUILD_ID} \
+                                $DOCKER_USERNAME/${FRONTEND_IMG}:latest"
+                            sh "docker push $DOCKER_USERNAME/${FRONTEND_IMG}:latest"
+                            echo 'Building FE docker image complete.'
                         }
                     }
                 }
