@@ -9,11 +9,12 @@ pipeline {
     pollSCM 'H 12,5,23 * * 1,2,3,4,5'
   }
   stages {
-    stage ('Clean workspace') {
+    stage ('Checkout') {
       steps {
-        echo 'Cleaning workspace...'
-        cleanWs()
-        echo 'Cleaning done'
+        echo 'Chckout processing...'
+        checkout scm
+        git branch: 'dev', changelog: false, credentialsId: 'gitlab-credential', poll: false, url: 'https://lab.ssafy.com/s11-bigdata-dist-sub1/S11P21D107.git'
+        echo 'Checkout done'
       }
     }
     stage ('Clone') {
@@ -29,7 +30,7 @@ pipeline {
               steps {
                 echo 'BE Building...'
                 dir('./backend/mijung') {
-                  sh './gradlew clean build -x test'
+                  sh './gradlew -v'
                 }
                 echo 'BE Building complete.'
               }
