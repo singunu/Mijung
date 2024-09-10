@@ -28,7 +28,7 @@ pipeline {
             stage('BE-Build') {
               steps {
                 echo 'BE Building...'
-                dir('./backend') {
+                dir('./backend/mijung') {
                   sh './gradlew clean build -x test'
                 }
                 echo 'BE Building complete.'
@@ -42,7 +42,7 @@ pipeline {
                 steps {
                   echo 'FE Building...'
                   dir('./frontend') {
-                    sh 'npm i'
+                    sh 'npm install'
                     sh 'npm run build'
                   }
                   echo 'FE Building complete.'
