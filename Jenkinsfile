@@ -70,13 +70,13 @@ pipeline {
         '''
       }
     }
-    post {
-      success {
-
-      }
-      failure {
-
-      }
+  }
+  post {
+    success {
+      echo 'Build Success.'
+    }
+    failure {
+      echo 'Build Fail.'
     }
   }
 }
