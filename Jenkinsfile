@@ -31,7 +31,7 @@ pipeline {
                 echo 'BE Building...'
                 dir('./backend/mijung') {
                   sh 'chmod +x ./gradlew'
-                  sh './gradlew -v'
+                  sh './gradlew clean build'
                 }
                 echo 'BE Building complete.'
               }
