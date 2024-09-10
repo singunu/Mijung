@@ -3,7 +3,7 @@ pipeline {
 
   tools {
     gradle 'Gradle-8.10'
-    nodejs 'nodeJS-20.15.0'
+    nodejs 'node-20.15.0'
   }
   triggers {
     pollSCM 'H 12,5,23 * * 1,2,3,4,5'
