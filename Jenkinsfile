@@ -5,9 +5,11 @@ pipeline {
     gradle 'Gradle-8.10'
     nodejs 'node-20.15.0'
   }
+
   triggers {
     pollSCM 'H 12,5,23 * * 1,2,3,4,5'
   }
+
   stages {
     stage ('Checkout') {
       steps {
@@ -17,16 +19,11 @@ pipeline {
         echo 'Checkout done'
       }
     }
-    stage ('Clone') {
-      steps {
-        echo 'Cloing...'
-      }
-    }
     stage('Build') {
       parallel {
-        stage('BE Process') {
-          stages{
-            stage('BE-Build') {
+        stage('BE Build') {
+          // stages{
+            // stage('BE-Build') {
               steps {
                 echo 'BE Building...'
                 dir('./backend/mijung') {
@@ -35,22 +32,22 @@ pipeline {
                 }
                 echo 'BE Building complete.'
               }
-            }
-          }
+            // }
+          // }
         }
-        stage('FE Process') {
-          stages{
-              stage('FE-Build') {
-                steps {
-                  echo 'FE Building...'
-                  dir('./frontend') {
-                    sh 'npm install'
-                    sh 'npm run build'
-                  }
-                  echo 'FE Building complete.'
+        stage('FE Build') {
+          // stages{
+            // stage('FE-Build') {
+              steps {
+                echo 'FE Building...'
+                dir('./frontend') {
+                  sh 'npm install'
+                  sh 'npm run build'
                 }
+                echo 'FE Building complete.'
               }
-          }
+            // }
+          // }
         }
       }
     }
@@ -63,6 +60,18 @@ pipeline {
         '''
       }
     }
+    // stage('Docker image & deliver') {
+    //   parallel {
+    //     stage('Build BE image') {
+    //       steps {
+    //         echo 'Building BE docker image...'
+    //         dir('./backend/mijung/') {
+    //           sh "docker build ."
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
     stage('Deploy') {
       steps {
         // 배포 단계 명령어
