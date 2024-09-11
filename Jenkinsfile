@@ -62,7 +62,7 @@ pipeline {
             }
         }
         stage('Build docker images & deliver') {
-            stpes {
+            steps {
                 withCredentials([
                     usernamePassword(
                         credentialsId: 'dockerhub',
