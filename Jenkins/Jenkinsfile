@@ -3,7 +3,7 @@ pipeline {
     agent any
 
     tools {
-        gradle 'Gradle-8.10'
+        gradle 'gradle-8.10'
         nodejs 'node-20.15.0'
     }
 
