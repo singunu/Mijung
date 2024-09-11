@@ -63,13 +63,13 @@ pipeline {
         }
         stage('Build docker images & deliver') {
             stages {
-                withCredentials([
-                    usernamePassword(
-                        credentialsId: 'dockerhub',
-                        passwordVariable: 'DOCKER_PASSWORD',
-                        usernameVariable: 'DOCKER_USERNAME'
-                )]) {
-                    stage('Docker Image build') {
+                stage('Docker Image build') {
+                    withCredentials([
+                        usernamePassword(
+                            credentialsId: 'dockerhub',
+                            passwordVariable: 'DOCKER_PASSWORD',
+                            usernameVariable: 'DOCKER_USERNAME'
+                    )]) {
                         sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
                         dir("${BACKEND_DIR}") {
                             echo 'Building BE docker image...'
