@@ -69,23 +69,24 @@ pipeline {
                         passwordVariable: 'DOCKER_PASSWORD',
                         usernameVariable: 'DOCKER_USERNAME'
                 )]) {
-                    sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
-                    dir("${BACKEND_DIR}") {
-                        echo 'Building BE docker image...'
-                        sh "docker build -t $DOCKER_USERNAME/${BACKEND_IMG}:${env.BUILD_ID} ."
-                        sh "docker tag $DOCKER_USERNAME/${BACKEND_IMG}:${env.BUILD_ID} \
-                            $DOCKER_USERNAME/${BACKEND_IMG}:latest"
-                        sh "docker push $DOCKER_USERNAME/${BACKEND_IMG}:latest"
-                        echo 'Building BE docker image complete.'
-                    }
-                    dir("${FRONTEND_DIR}") {
-                        echo 'Building FE docker image...'
-                        sh "docker build -t $DOCKER_USERNAME/${FRONTEND_IMG}:${env.BUILD_ID} ."
-                        sh "docker tag $DOCKER_USERNAME/${FRONTEND_IMG}:${env.BUILD_ID} \
-                            $DOCKER_USERNAME/${FRONTEND_IMG}:latest"
-                        sh "docker push $DOCKER_USERNAME/${FRONTEND_IMG}:latest"
-                        echo 'Building FE docker image complete.'
-                    }
+                    // sh 'docker ps'
+                    // sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
+                    // dir("${BACKEND_DIR}") {
+                    //     echo 'Building BE docker image...'
+                    //     sh "docker build -t $DOCKER_USERNAME/${BACKEND_IMG}:${env.BUILD_ID} ."
+                    //     sh "docker tag $DOCKER_USERNAME/${BACKEND_IMG}:${env.BUILD_ID} \
+                    //         $DOCKER_USERNAME/${BACKEND_IMG}:latest"
+                    //     sh "docker push $DOCKER_USERNAME/${BACKEND_IMG}:latest"
+                    //     echo 'Building BE docker image complete.'
+                    // }
+                    // dir("${FRONTEND_DIR}") {
+                    //     echo 'Building FE docker image...'
+                    //     sh "docker build -t $DOCKER_USERNAME/${FRONTEND_IMG}:${env.BUILD_ID} ."
+                    //     sh "docker tag $DOCKER_USERNAME/${FRONTEND_IMG}:${env.BUILD_ID} \
+                    //         $DOCKER_USERNAME/${FRONTEND_IMG}:latest"
+                    //     sh "docker push $DOCKER_USERNAME/${FRONTEND_IMG}:latest"
+                    //     echo 'Building FE docker image complete.'
+                    // }
                 }
             }
         }
@@ -97,6 +98,10 @@ pipeline {
         }
     }
     post {
+        always {
+            // sh 'docker logout'
+            sh 'echo "always"'
+        }
         success {
             echo 'Build Success.'
         }
