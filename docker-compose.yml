@@ -1,6 +1,6 @@
 # Version top-level element is obsolete
 # https://docs.docker.com/reference/compose-file/version-and-name/
-# test
+
 name: mijung
 
 services:
