@@ -12,6 +12,7 @@ pipeline {
         BACKEND_DIR = './backend/mijung'
         FRONTEND_IMG = 'mijung_frontend'
         BACKEND_IMG = 'mijung_backend'
+        AWS_HOST = credentials('AWS_HOST')
     }
 
     triggers {
@@ -69,13 +70,13 @@ pipeline {
                         passwordVariable: 'DOCKER_PASSWORD',
                         usernameVariable: 'DOCKER_USERNAME'
                 )]) {
-                    sh 'docker ps'
                     sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
                     dir("${BACKEND_DIR}") {
                         echo 'Building BE docker image...'
                         sh "docker build -t $DOCKER_USERNAME/${BACKEND_IMG}:${env.BUILD_ID} ."
                         sh "docker tag $DOCKER_USERNAME/${BACKEND_IMG}:${env.BUILD_ID} \
                             $DOCKER_USERNAME/${BACKEND_IMG}:latest"
+                        sh "docker push $DOCKER_USERNAME/${BACKEND_IMG}:${env.BUILD_ID}"
                         sh "docker push $DOCKER_USERNAME/${BACKEND_IMG}:latest"
                         echo 'Building BE docker image complete.'
                     }
@@ -84,23 +85,22 @@ pipeline {
                     //     sh "docker build -t $DOCKER_USERNAME/${FRONTEND_IMG}:${env.BUILD_ID} ."
                     //     sh "docker tag $DOCKER_USERNAME/${FRONTEND_IMG}:${env.BUILD_ID} \
                     //         $DOCKER_USERNAME/${FRONTEND_IMG}:latest"
+                        // sh "docker push $DOCKER_USERNAME/${FRONTEND_IMG}:${env.BUILD_ID}"
                     //     sh "docker push $DOCKER_USERNAME/${FRONTEND_IMG}:latest"
                     //     echo 'Building FE docker image complete.'
                     // }
                 }
             }
         }
-        stage('Deploy') {
+        stage('Deploy to EC2') {
             steps {
                 echo 'Deploying....'
-                sh 'echo "doing delivery stuff..."'
             }
         }
     }
     post {
         always {
-            // sh 'docker logout'
-            sh 'echo "always"'
+            sh 'docker logout'
         }
         success {
             echo 'Build Success.'
