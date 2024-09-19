@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class Ingredient {
     @Id
     @Column(name = "ingredient_id", updatable = false, nullable = false)
-    private String id;
+    private Integer id;
 
     @Column(name = "item_category_code", nullable = false, length = 20)
     private String itemCategoryCode;
