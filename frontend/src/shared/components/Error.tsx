@@ -1,6 +1,4 @@
-import React from 'react';
-
-const Error: React.FC = () => (
+const Error = () => (
   <div>
     <h1>Something went wrong</h1>
   </div>

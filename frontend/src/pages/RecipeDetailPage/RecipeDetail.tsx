@@ -1,9 +1,8 @@
-import React from 'react';
 import SideLayout from '../../app/RoutingLayout/SideLayout';
 import MainLayout from '../../app/RoutingLayout/MainLayout';
 // import { useParams } from 'react-router-dom';
 
-const RecipeDetailPage: React.FC = () => {
+const RecipeDetailPage = () => {
   // const { id } = useParams<{ id: string }>();
 
   // 샘플 데이터

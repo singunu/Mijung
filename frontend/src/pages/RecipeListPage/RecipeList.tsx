@@ -1,4 +1,3 @@
-import React from 'react';
 import SideLayout from '../../app/RoutingLayout/SideLayout';
 import MainLayout from '../../app/RoutingLayout/MainLayout';
 
@@ -8,7 +7,7 @@ const sampleRecipes = [
   { id: '3', name: '불고기', ingredients: '소고기, 양파, 당근' },
 ];
 
-const RecipeList: React.FC = () => {
+const RecipeList = () => {
   return (
     <div className="grid grid-cols-10">
       <SideLayout />

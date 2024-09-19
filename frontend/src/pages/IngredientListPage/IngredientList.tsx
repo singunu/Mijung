@@ -1,10 +1,10 @@
-import React from 'react';
 import SideLayout from '../../app/RoutingLayout/SideLayout';
 import MainLayout from '../../app/RoutingLayout/MainLayout';
+import Searchbar from '../../widgets/Searchbar/Searchbar';
 
 import { Link } from 'react-router-dom';
 
-const IngredientListPage: React.FC = () => {
+const IngredientListPage = () => {
   const ingredients = [
     { id: 1, name: '쌀', description: '한국 요리의 기본이 되는 주식입니다.' },
     { id: 2, name: '김치', description: '한국의 대표적인 발효 식품입니다.' },
@@ -18,6 +18,7 @@ const IngredientListPage: React.FC = () => {
     <div className="grid grid-cols-10">
       <SideLayout />
       <MainLayout>
+        <Searchbar type="ingredients" />
         <div className="container mx-auto px-4 py-8">
           <h1 className="text-3xl font-bold mb-6">재료 목록</h1>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

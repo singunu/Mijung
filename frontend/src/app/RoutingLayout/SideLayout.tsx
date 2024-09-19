@@ -1,11 +1,9 @@
-const SideLayout: React.FC<React.HTMLAttributes<HTMLElement>> = ({
-  children,
-  className,
-  ...props
-}: {
+type SideLayoutProps = {
   className?: string;
   children?: React.ReactNode;
-}) => {
+} & React.HTMLAttributes<HTMLElement>;
+
+const SideLayout = ({ children, className, ...props }: SideLayoutProps) => {
   return (
     <aside className={`hidden lg:flex col-span-2 ${className}`} {...props}>
       {children}

@@ -1,8 +1,7 @@
-import React from 'react';
 import SideLayout from '../../app/RoutingLayout/SideLayout';
 import MainLayout from '../../app/RoutingLayout/MainLayout';
 
-const RecipeJjimDetail: React.FC = () => {
+const RecipeJjimDetail = () => {
   return (
     <div className="grid grid-cols-10">
       <SideLayout />
