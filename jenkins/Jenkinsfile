@@ -119,7 +119,12 @@ pipeline {
         stage('Deploy to EC2') {
             steps {
                 echo 'Deploying....'
-                withCredentials([usernamePassword(credentialId: 'gitlab-credential', usernameVariable: 'GITLAB_USERNAME', passwordVariable: 'GITLAB_PASSWORD')]) {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'gitlab-credential', 
+                        usernameVariable: 'GITLAB_USERNAME', 
+                        passwordVariable: 'GITLAB_PASSWORD')
+                ]) {
                     sshagent(['ssh-agent']) {
                         script {
                             sh """
