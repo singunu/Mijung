@@ -35,7 +35,7 @@ dependencies {
 
     //sql connector
     runtimeOnly 'com.mysql:mysql-connector-j'
-git
+
     //Spark 관련
     implementation 'org.apache.spark:spark-core_2.13:3.5.1'
 }
