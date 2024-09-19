@@ -36,8 +36,14 @@ dependencies {
     //sql connector
     runtimeOnly 'com.mysql:mysql-connector-j'
 
-    //Spark 관련
-    implementation 'org.apache.spark:spark-core_2.13:3.5.1'
+    // Spark 관련 (SLF4J 관련 종속성 제외)
+    implementation ('org.apache.spark:spark-core_2.13:3.5.1') {
+        exclude group: 'org.slf4j'
+        exclude group: 'org.apache.logging.log4j'
+    }
+
+    // Logback for SLF4J binding
+    implementation 'ch.qos.logback:logback-classic:1.4.11'
 }
 
 tasks.named('test') {
