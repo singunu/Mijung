@@ -119,18 +119,23 @@ pipeline {
         stage('Deploy to EC2') {
             steps {
                 echo 'Deploying....'
-                sshagent(['ssh-agent']) {
-                    script {
-                        sh """
-                            ssh ubuntu@${AWS_IP} '
-                                echo current branch name is ${env.BRANCH_NAME}
-                                cd ./jenkins-project
-                                docker compose restart
-                            '
-                        """
-                        // sh "git pull origin ${}"
-                        // sh "ssh ubuntu@${AWS_IP} 'docker compose '"
-                    } 
+                withCredentials([usernamePassword(credentialId: 'gitlab-credential', usernameVariable: 'GITLAB_USERNAME', passwordVariable: 'GITLAB_PASSWORD')]) {
+                    sshagent(['ssh-agent']) {
+                        script {
+                            sh """
+                                ssh ubuntu@${AWS_IP} '
+                                    echo current branch name is ${env.BRANCH_NAME}
+                                    docker rmi vaaastlake/mijung_backend
+                                    cd ./S11P21D107
+                                    git pull https://${GITLAB_USERNAME}:${GITLAB_PASSWORD}@ \
+                                        lab.ssafy.com/s11-bigdata-dist-sub1/S11P21D107.git ${env.BRANCH_NAME}
+                                    docker compose restart
+                                '
+                            """
+                            // sh "git pull origin ${}"
+                            // sh "ssh ubuntu@${AWS_IP} 'docker compose '"
+                        } 
+                    }
                 }
             }
         }
