@@ -11,7 +11,8 @@ pipeline {
         BACKEND_DIR = './backend/mijung'
         // FRONTEND_IMG = 'mijung_frontend'
         BACKEND_IMG = 'mijung_backend'
-        PROJECT_DIR = '/home/ubuntu/jenkins-project'
+        PROJECT_DIR = '/home/ubuntu/S11P21D107'
+        TEST_PROJECT_DIR = '/home/ubuntu/jenkins-project'
         AWS_HOST = credentials('AWS_HOST')
         AWS_IP = credentials('AWS_IP')
     }
@@ -97,18 +98,18 @@ pipeline {
                     sshagent(['ssh-agent']) {
                         script {
                              // 먼저 원격 서버에 임시 디렉토리 생성
-                            sh "ssh ubuntu@${AWS_IP} 'mkdir -p jenkins-project/temp'"
+                            sh "ssh ubuntu@${AWS_IP} 'mkdir -p ${PROJECT_DIR}/temp'"
                             
                             // scp를 사용하여 파일을 전송
-                            sh "scp -r ./dist/* ubuntu@${AWS_IP}:jenkins-project/temp/"
+                            sh "scp -r ./dist/* ubuntu@${AWS_IP}:${PROJECT_DIR}/temp/"
                             
                             // 원격 서버에서 파일을 이동하고 정리
                             sh """
                                 ssh ubuntu@${AWS_IP} '
-                                    rm -rf jenkins-project/dist &&
-                                    mv jenkins-project/temp jenkins-project/dist &&
-                                    find jenkins-project/dist -type d -exec chmod 755 {} \\; &&
-                                    find jenkins-project/dist -type f -exec chmod 644 {} \\;
+                                    rm -rf ${PROJECT_DIR}/dist &&
+                                    mv ${PROJECT_DIR}/temp ${PROJECT_DIR}/dist &&
+                                    find ${PROJECT_DIR}/dist -type d -exec chmod 755 {} \\; &&
+                                    find ${PROJECT_DIR}/dist -type f -exec chmod 644 {} \\;
                                 '
                             """
                         }
