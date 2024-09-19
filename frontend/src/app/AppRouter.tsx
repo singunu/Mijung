@@ -5,7 +5,7 @@ import IngredientDetailPage from '../pages/IngredientDetailPage/IngredientDetail
 import RecipeListPage from '../pages/RecipeListPage/RecipeList';
 import RecipeDetailPage from '../pages/RecipeDetailPage/RecipeDetail';
 import RecipeJjimPage from '../pages/RecipeJjimPage/RecipeJjimDetail';
-import Layout from '../app/RoutingLayer/Layer';
+import Layout from './RoutingLayout/Layout';
 
 export const router = createBrowserRouter([
   {
