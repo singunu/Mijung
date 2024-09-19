@@ -1,7 +1,6 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 
-const LandingPage: React.FC = () => {
+const LandingPage: = () => {
   return (
     <div className="min-h-screen bg-gradient-to-r from-blue-400 to-purple-500 flex flex-col justify-center items-center text-white">
       <h1 className="text-5xl font-bold mb-6">

@@ -1,8 +1,7 @@
-import React from 'react';
 import SideLayout from '../../app/RoutingLayout/SideLayout';
 import MainLayout from '../../app/RoutingLayout/MainLayout';
 // GPT sample page
-const MainPage: React.FC = () => {
+const MainPage = () => {
   return (
     <div className="grid grid-cols-10">
       <SideLayout />

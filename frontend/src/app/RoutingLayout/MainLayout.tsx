@@ -1,11 +1,9 @@
-const MainLayout: React.FC<React.HTMLAttributes<HTMLElement>> = ({
-  children,
-  className,
-  ...props
-}: {
+type MainLayoutProps = React.HTMLAttributes<HTMLElement> & {
   children?: React.ReactNode;
   className?: string;
-}) => {
+};
+
+const MainLayout = ({ children, className, ...props }: MainLayoutProps) => {
   return (
     <main
       className={`col-span-10 m-5 lg:col-span-6 flex flex-col ${className}`}
