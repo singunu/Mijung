@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom';
 import SideLayout from '../../app/RoutingLayout/SideLayout';
 import MainLayout from '../../app/RoutingLayout/MainLayout';
+import Searchbar from '../../widgets/Searchbar/Searchbar';
 
 const IngredientDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -40,6 +41,7 @@ const IngredientDetailPage = () => {
     <div className="grid grid-cols-10">
       <SideLayout />
       <MainLayout>
+        <Searchbar type="ingredients" />
         <div className="container mx-auto px-4 py-8">
           <h1 className="text-3xl font-bold mb-6">
             {ingredient.name} 상세 정보
