@@ -16,31 +16,31 @@ import org.hibernate.annotations.ColumnDefault;
 public class Recipe {
     @Id
     @Column(name = "recipe_id", updatable = false, nullable = false)
-    private String id;
+    private Integer id;
 
     @Column(columnDefinition = "TEXT")
     private String name;
 
-    @Column(nullable = false)
+    @Column
     private Integer hit;
 
-    @Column(name = "scrap_count", nullable = false)
+    @Column(name = "scrap_count")
     private Integer scrapCount;
 
     @Enumerated(value = EnumType.STRING)
-    @Column(nullable = false)
+    @Column
     private Kind kind;
 
     @Enumerated(value = EnumType.STRING)
-    @Column(nullable = false)
+    @Column
     private Inbun inbun;
 
     @Enumerated(value = EnumType.STRING)
-    @Column(nullable = false)
+    @Column
     private Level level;
 
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "cooking_time", nullable = false)
+    @Column(name = "cooking_time")
     private CookingTime cookingTime;
 
     @Column
