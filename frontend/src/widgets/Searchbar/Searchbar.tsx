@@ -10,7 +10,7 @@
 또는
 <Searchbar type="recipes" />
  */
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   getIngredientAutoComplete,
   getRecipeAutoComplete,
