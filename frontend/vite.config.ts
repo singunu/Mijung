@@ -11,7 +11,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
-        name: '미정 (味定):', // 설치 배너에 표시되는 이름
+        name: '미정 (味定)', // 설치 배너에 표시되는 이름
         short_name: '미정', // 아이콘 아래에 표시될 이름
         description: '미정 (味定)은 자취생들을 위한 레시피 추천 서비스입니다.',
         theme_color: '#ffffff',
