@@ -1,8 +1,12 @@
 package com.example.mijung.ingredient.entity;
 
+import com.example.mijung.material.entity.Material;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,4 +48,8 @@ public class Ingredient {
 
     @Column(name = "analyzed", nullable = false)
     private Boolean analyzed;
+
+    @OneToMany(mappedBy = "ingredient")
+    private List<Material> material;
+
 }
