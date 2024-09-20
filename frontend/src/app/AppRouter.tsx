@@ -6,12 +6,13 @@ import RecipeListPage from '../pages/RecipeListPage/RecipeList';
 import RecipeDetailPage from '../pages/RecipeDetailPage/RecipeDetail';
 import RecipeJjimPage from '../pages/RecipeJjimPage/RecipeJjimDetail';
 import Layout from './RoutingLayout/Layout';
+import Error from '../shared/components/Error';
 
 export const router = createBrowserRouter([
   {
     path: '/',
     element: <Layout />,
-    errorElement: <div>Error ! 에러입니다 ! </div>, // 에러 페이지 추후 만들기
+    errorElement: <Error />,
     children: [
       {
         index: true,

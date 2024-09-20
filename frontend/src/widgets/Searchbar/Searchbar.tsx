@@ -11,6 +11,7 @@
 <Searchbar type="recipes" />
  */
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   getIngredientAutoComplete,
   getRecipeAutoComplete,
@@ -23,6 +24,7 @@ interface SearchbarProps {
 }
 
 const Searchbar = ({ type }: SearchbarProps) => {
+  const navigate = useNavigate();
   const [keyword, setKeyword] = useState('');
   const [suggestions, setSuggestions] = useState<
     Array<{ id: number; word: string }>
@@ -77,13 +79,24 @@ const Searchbar = ({ type }: SearchbarProps) => {
     }
   };
 
+  const handleItemClick = (item: { id: number; word: string }) => {
+    setKeyword(item.word);
+    setIsDropdownOpen(false);
+
+    if (type === 'ingredients') {
+      navigate(`/ingredients/${item.id}`);
+    } else {
+      navigate(`/recipes/${item.id}`);
+    }
+  };
+
   return (
     <div className="relative w-full max-w-xl">
       <input
         type="text"
         value={keyword}
         onChange={(e) => setKeyword(e.target.value)}
-        onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+        onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
         className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         placeholder={type === 'ingredients' ? '식재료 검색' : '레시피 검색'}
       />
@@ -93,10 +106,7 @@ const Searchbar = ({ type }: SearchbarProps) => {
             <li
               key={item.id}
               className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-              onClick={() => {
-                setKeyword(item.word);
-                setIsDropdownOpen(false);
-              }}
+              onClick={() => handleItemClick(item)}
             >
               {item.word}
             </li>
