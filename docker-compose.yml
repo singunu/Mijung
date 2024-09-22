@@ -4,6 +4,28 @@
 name: mijung
 
 services:
+  db:
+    image: mysql:8.4.1
+    volumes:
+      - "mysql_data:/var/lib/mysql"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DB}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      TZ: Asia/Seoul
+      LANG: C.UTF-8
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+    expose:
+      - "3306"
+    networks:
+      - mijung_net
+    container_name: mijung_db
+
   webserver:
     image: nginx:latest
     ports:
@@ -31,6 +53,15 @@ services:
   backend:
     image: vaaastlake/mijung_backend
     restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_PORT: ${MYSQL_PORT}
+      MYSQL_DB: ${MYSQL_DB}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     expose:
       - "8080"
     networks:
