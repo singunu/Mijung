@@ -56,7 +56,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    env_file: ".env"
+    env_file:
+      - .env
     environment:
       MYSQL_HOST: ${MYSQL_HOST}
       MYSQL_PORT: ${MYSQL_PORT}
