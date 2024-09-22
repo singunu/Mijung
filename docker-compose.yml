@@ -68,7 +68,8 @@ services:
       - mijung_net
     container_name: mijung_backend
 
-# volumes:
+volumes:
+  mysql_data:
 
 networks:
   mijung_net:
