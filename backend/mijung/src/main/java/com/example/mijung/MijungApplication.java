@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@OpenAPIDefinition(servers = {@Server(url = "https://mijung.store", description = "도메인 설명")})
+@OpenAPIDefinition(servers = {@Server(url = "/", description = "도메인 설명")})
 @SpringBootApplication
 public class MijungApplication {
 
