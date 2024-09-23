@@ -1,6 +1,5 @@
 package com.example.mijung.recipe.entity;
 
-import com.example.mijung.ingredient.entity.Ingredient;
 import com.example.mijung.material.entity.Material;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -15,6 +14,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.data.jpa.repository.query.Procedure;
 
 @Entity
 @Getter
@@ -54,7 +54,7 @@ public class Recipe {
 
     // 조리 순서 관련
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Procedure> procedures = new ArrayList<>();
+    private List<Step> steps = new ArrayList<>();
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Material> materials = new ArrayList<>();
