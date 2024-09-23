@@ -1,5 +1,6 @@
 package com.example.mijung.recipe.entity;
 
+import com.example.mijung.ingredient.entity.Ingredient;
 import com.example.mijung.material.entity.Material;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -57,4 +58,7 @@ public class Recipe {
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Material> materials = new ArrayList<>();
+
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Etc> etcs = new ArrayList<>();
 }
