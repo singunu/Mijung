@@ -1,11 +1,13 @@
 package com.example.mijung.ingredient.entity;
 
 import com.example.mijung.material.entity.Material;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -52,4 +54,6 @@ public class Ingredient {
     @OneToMany(mappedBy = "ingredient")
     private List<Material> material;
 
+    @OneToMany(mappedBy = "ingredient", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<IngredientInfo> ingredientInfo = new ArrayList<>();
 }
