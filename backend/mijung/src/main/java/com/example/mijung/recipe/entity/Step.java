@@ -13,9 +13,9 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Procedure {
+public class Step {
     @Id
-    @Column(name = "procedure_id", updatable = false, nullable = false)
+    @Column(name = "step_id", updatable = false, nullable = false)
     private Integer id;
 
     @Column(nullable = false,columnDefinition = "MEDIUMTEXT")
