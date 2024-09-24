@@ -2,7 +2,8 @@ package com.example.mijung.recipe.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class RecipeController {
 
-    @GetMapping
+    @GetMapping("/{pathVariable}")
     @Operation(summary = "test용", description = "test용으로 만들었습니다.")
     @ApiResponse(responseCode = "200", description = "성공")
-    public ResponseEntity<String> test() {
+    public ResponseEntity<?> test(@PathVariable(name = "pathVariable", required = true) String pathVariable) {
 
-        return ResponseEntity.status(HttpStatus.OK).body("test입니다.");
+        Map<String, String> map = new HashMap<>();
+        map.put("pathVariable", pathVariable);
+        return ResponseEntity.status(HttpStatus.OK).body(map);
     }
 
 }
