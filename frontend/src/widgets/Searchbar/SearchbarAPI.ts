@@ -13,7 +13,7 @@ interface SearchParams {
 // API 함수
 export const getIngredientAutoComplete = async (search: string) => {
   if (USE_MOCK_API) {
-    return mockData.ingredients.filter((item) => item.word.includes(search));
+    return mockData.ingredients.filter((item) => item.name.includes(search));
   }
 
   try {
@@ -29,7 +29,7 @@ export const getIngredientAutoComplete = async (search: string) => {
 
 export const getRecipeAutoComplete = async (search: string) => {
   if (USE_MOCK_API) {
-    return mockData.recipes.filter((item) => item.word.includes(search));
+    return mockData.recipes.filter((item) => item.name.includes(search));
   }
 
   try {
@@ -80,7 +80,7 @@ export const searchRecipes = async ({
 }: SearchParams) => {
   if (USE_MOCK_API) {
     const filteredData = mockData.recipes.filter((item) =>
-      item.word.includes(keyword)
+      item.name.includes(keyword)
     );
     return {
       data: filteredData.slice((page - 1) * perPage, page * perPage),
