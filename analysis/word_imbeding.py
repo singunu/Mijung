@@ -6,7 +6,7 @@ import numpy as np
 # 재료 숫자 시퀀스의 Word2Vec 임베딩 및 벡터 저장 스크립트
 
 # CSV 파일 불러오기
-df = pd.read_csv("C:/Users/SSAFY/Desktop/분석/123123.csv", encoding='utf-8', low_memory=False)
+df = pd.read_excel("C:/Users/SSAFY/Desktop/분석/데이터전처리/완료/final_modified_output.xlsx")
 
 # 'Numbers from href' 열의 값이 문자열인 경우에만 eval() 적용
 def safe_eval(x):
