@@ -36,7 +36,7 @@ public class IngredientService {
 
         List<IngredientInfoViewResponse> data = new ArrayList<>();
         for (int i = 1; i < request.getCount() + 1; i++) {
-            data.add(IngredientInfoViewResponse.of(i));
+            data.add(IngredientInfoViewResponse.of(i, ""));
         }
 
         return ResponseDTO.from(data);
@@ -56,7 +56,7 @@ public class IngredientService {
     @Transactional
     public IngredientInfoViewResponse getIngredientInfo(Integer ingredientId) {
 
-        return IngredientInfoViewResponse.of(ingredientId);
+        return IngredientInfoViewResponse.of(ingredientId, "");
     }
 
     @Transactional
