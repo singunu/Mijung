@@ -23,7 +23,7 @@ public class IngredientService {
 
         List<IngredientInfoViewResponse> data = new ArrayList<>();
         for (int i = 1; i < dto.getPerPage() + 1; i++) {
-            data.add(IngredientInfoViewResponse.of(i));
+            data.add(IngredientInfoViewResponse.of(i, dto.getCategory()));
         }
 
         PaginationDTO pagination = PaginationDTO.of(20, dto.getPage(), dto.getPerPage());
