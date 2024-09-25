@@ -34,3 +34,12 @@ alter table recipe modify cooking_time enum('MORE_THAN_2_HOURS','WITHIN_10_MINUT
 
 alter table recipe modify image varchar(255) after cooking_time;
 ```
+
+### 9월 25일 상황
+* cow.csv는 끝남
+* vegetable.json은 문제를 발견해서 내일 파싱을 다시해야됨.
+* * 다음과 같이 쓰면 kindcode이 없이도 모든 정보를 알 수 있다. p_itemcode만 있으면 알 수 있다..
+```text
+http://www.kamis.or.kr/service/price/xml.do?action=periodEcoPriceList&p_productclscode=01&p_regday=2024-09-24&p_itemcategorycode=100&p_itemcode=141&p_convert_kg_yn=Y&p_cert_key=111&p_cert_id=222&p_returntype=xml
+
+```
