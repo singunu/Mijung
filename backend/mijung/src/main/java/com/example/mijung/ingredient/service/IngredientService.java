@@ -13,15 +13,18 @@ import com.example.mijung.ingredient.dto.IngredientSiseRequest;
 import com.example.mijung.ingredient.entity.Ingredient;
 import com.example.mijung.ingredient.entity.IngredientInfo;
 import com.example.mijung.ingredient.entity.IngredientRate;
-import com.example.mijung.ingredient.repository.IngredientInfoRepository;
-import com.example.mijung.ingredient.repository.IngredientRateRepository;
 import com.example.mijung.ingredient.repository.IngredientRepository;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -35,13 +38,26 @@ public class IngredientService {
     @Transactional
     public ResponseDTO<List<IngredientInfoViewResponse>> getIngredientList(PaginationAndFilteringDto dto) {
 
-        List<IngredientInfoViewResponse> data = new ArrayList<>();
-        for (int i = 1; i < dto.getPerPage() + 1; i++) {
-            data.add(IngredientInfoViewResponse.test(i, dto.getCategory()));
-        }
+        Pageable pageable = PageRequest.of(dto.getPage() - 1, dto.getPerPage());
 
-        PaginationDTO pagination = PaginationDTO.of(20, dto.getPage(), dto.getPerPage());
+        // DB에서 카테고리와 키워드에 맞는 식재료 데이터를 페이징하여 조회
+        Page<Ingredient> ingredientsPage = ingredientRepository.findByItemCategoryNameContainingAndItemNameContaining(
+                resolveCategory(dto.getCategory()),
+                resolveKeyword(dto.getKeyword()),
+                pageable
+        );
 
+        // 조회된 데이터를 DTO로 변환
+        List<IngredientInfoViewResponse> data = ingredientsPage.getContent().stream()
+                .map(IngredientInfoViewResponse::of)  // Ingredient -> DTO 변환
+                .collect(Collectors.toList());
+
+        // 페이지네이션 정보 생성
+        PaginationDTO pagination = PaginationDTO.of(
+                (int) ingredientsPage.getTotalElements(), dto.getPage(), dto.getPerPage()
+        );
+
+        // 데이터와 페이지네이션 정보를 담아 반환
         return ResponseDTO.of(data, pagination);
     }
 
@@ -115,5 +131,15 @@ public class IngredientService {
     public Ingredient getIngredient(Integer ingredientId) {
         return ingredientRepository.findById(ingredientId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, INGREDIENT_NOT_FOUND.getMessage()));
+    }
+
+    private String resolveCategory(String category) {
+        // 카테고리가 "all"이면 빈 문자열로 처리하여 모든 카테고리 조회
+        return category.equals("all") ? "" : category;
+    }
+
+    private String resolveKeyword(String keyword) {
+        // 키워드가 null이면 빈 문자열로 처리하여 모든 이름 조회
+        return keyword == null ? "" : keyword;
     }
 }
