@@ -8,9 +8,9 @@
 // 각각 재료 목록이나 레시피 목록에 접근할 수 있습니다.
 
 export const mockData = {
-  ingredients: [
+  data: [
     {
-      id: 1,
+      ingredientId: 1,
       name: '사과',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -20,7 +20,7 @@ export const mockData = {
       changePrice: 60,
     },
     {
-      id: 2,
+      ingredientId: 2,
       name: '배',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -30,7 +30,7 @@ export const mockData = {
       changePrice: -48,
     },
     {
-      id: 3,
+      ingredientId: 3,
       name: '바나나',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -40,7 +40,7 @@ export const mockData = {
       changePrice: 20,
     },
     {
-      id: 4,
+      ingredientId: 4,
       name: '당근',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -50,7 +50,7 @@ export const mockData = {
       changePrice: -9,
     },
     {
-      id: 5,
+      ingredientId: 5,
       name: '닭가슴살',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -60,7 +60,7 @@ export const mockData = {
       changePrice: 9,
     },
     {
-      id: 6,
+      ingredientId: 6,
       name: '달걀',
       retailUnit: '개',
       retailUnitsize: '1',
@@ -70,7 +70,7 @@ export const mockData = {
       changePrice: 10,
     },
     {
-      id: 7,
+      ingredientId: 7,
       name: '우유',
       retailUnit: 'ml',
       retailUnitsize: '1000',
@@ -80,7 +80,7 @@ export const mockData = {
       changePrice: -59,
     },
     {
-      id: 8,
+      ingredientId: 8,
       name: '두유',
       retailUnit: 'ml',
       retailUnitsize: '1000',
@@ -90,7 +90,7 @@ export const mockData = {
       changePrice: 30,
     },
     {
-      id: 9,
+      ingredientId: 9,
       name: '토마토',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -100,7 +100,7 @@ export const mockData = {
       changePrice: -5,
     },
     {
-      id: 10,
+      ingredientId: 10,
       name: '방울토마토',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -110,7 +110,7 @@ export const mockData = {
       changePrice: 29,
     },
     {
-      id: 11,
+      ingredientId: 11,
       name: '양파',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -120,7 +120,7 @@ export const mockData = {
       changePrice: 5,
     },
     {
-      id: 12,
+      ingredientId: 12,
       name: '감자',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -130,7 +130,7 @@ export const mockData = {
       changePrice: -15,
     },
     {
-      id: 13,
+      ingredientId: 13,
       name: '고구마',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -140,7 +140,7 @@ export const mockData = {
       changePrice: 29,
     },
     {
-      id: 14,
+      ingredientId: 14,
       name: '브로콜리',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -150,7 +150,7 @@ export const mockData = {
       changePrice: -15,
     },
     {
-      id: 15,
+      ingredientId: 15,
       name: '시금치',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -160,7 +160,7 @@ export const mockData = {
       changePrice: 14,
     },
     {
-      id: 16,
+      ingredientId: 16,
       name: '오이',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -170,7 +170,7 @@ export const mockData = {
       changePrice: -4,
     },
     {
-      id: 17,
+      ingredientId: 17,
       name: '파프리카',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -180,7 +180,7 @@ export const mockData = {
       changePrice: 52,
     },
     {
-      id: 18,
+      ingredientId: 18,
       name: '버섯',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -190,7 +190,7 @@ export const mockData = {
       changePrice: -30,
     },
     {
-      id: 19,
+      ingredientId: 19,
       name: '표고버섯',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -200,7 +200,7 @@ export const mockData = {
       changePrice: 39,
     },
     {
-      id: 20,
+      ingredientId: 20,
       name: '새송이버섯',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -210,7 +210,7 @@ export const mockData = {
       changePrice: -21,
     },
     {
-      id: 21,
+      ingredientId: 21,
       name: '마늘',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -220,7 +220,7 @@ export const mockData = {
       changePrice: 27,
     },
     {
-      id: 22,
+      ingredientId: 22,
       name: '생강',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -230,7 +230,7 @@ export const mockData = {
       changePrice: -29,
     },
     {
-      id: 23,
+      ingredientId: 23,
       name: '대파',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -240,7 +240,7 @@ export const mockData = {
       changePrice: 7,
     },
     {
-      id: 24,
+      ingredientId: 24,
       name: '쪽파',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -250,7 +250,7 @@ export const mockData = {
       changePrice: -8,
     },
     {
-      id: 25,
+      ingredientId: 25,
       name: '고추',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -260,7 +260,7 @@ export const mockData = {
       changePrice: 20,
     },
     {
-      id: 26,
+      ingredientId: 26,
       name: '청양고추',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -270,7 +270,7 @@ export const mockData = {
       changePrice: -20,
     },
     {
-      id: 27,
+      ingredientId: 27,
       name: '홍고추',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -280,7 +280,7 @@ export const mockData = {
       changePrice: 24,
     },
     {
-      id: 28,
+      ingredientId: 28,
       name: '호박',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -290,7 +290,7 @@ export const mockData = {
       changePrice: -10,
     },
     {
-      id: 29,
+      ingredientId: 29,
       name: '애호박',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -300,7 +300,7 @@ export const mockData = {
       changePrice: 16,
     },
     {
-      id: 30,
+      ingredientId: 30,
       name: '단호박',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -310,7 +310,7 @@ export const mockData = {
       changePrice: -36,
     },
     {
-      id: 31,
+      ingredientId: 31,
       name: '가지',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -320,7 +320,7 @@ export const mockData = {
       changePrice: 14,
     },
     {
-      id: 32,
+      ingredientId: 32,
       name: '상추',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -330,7 +330,7 @@ export const mockData = {
       changePrice: -11,
     },
     {
-      id: 33,
+      ingredientId: 33,
       name: '깻잎',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -340,7 +340,7 @@ export const mockData = {
       changePrice: 21,
     },
     {
-      id: 34,
+      ingredientId: 34,
       name: '콩나물',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -350,7 +350,7 @@ export const mockData = {
       changePrice: -4,
     },
     {
-      id: 35,
+      ingredientId: 35,
       name: '숙주나물',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -360,7 +360,7 @@ export const mockData = {
       changePrice: 10,
     },
     {
-      id: 36,
+      ingredientId: 36,
       name: '고사리',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -370,7 +370,7 @@ export const mockData = {
       changePrice: -59,
     },
     {
-      id: 37,
+      ingredientId: 37,
       name: '도라지',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -380,7 +380,7 @@ export const mockData = {
       changePrice: 81,
     },
     {
-      id: 38,
+      ingredientId: 38,
       name: '연근',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -390,7 +390,7 @@ export const mockData = {
       changePrice: -33,
     },
     {
-      id: 39,
+      ingredientId: 39,
       name: '우엉',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -400,7 +400,7 @@ export const mockData = {
       changePrice: 19,
     },
     {
-      id: 40,
+      ingredientId: 40,
       name: '미역',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -410,7 +410,7 @@ export const mockData = {
       changePrice: -12,
     },
     {
-      id: 41,
+      ingredientId: 41,
       name: '김',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -420,7 +420,7 @@ export const mockData = {
       changePrice: 48,
     },
     {
-      id: 42,
+      ingredientId: 42,
       name: '다시마',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -430,7 +430,7 @@ export const mockData = {
       changePrice: -25,
     },
     {
-      id: 43,
+      ingredientId: 43,
       name: '멸치',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -440,7 +440,7 @@ export const mockData = {
       changePrice: 33,
     },
     {
-      id: 44,
+      ingredientId: 44,
       name: '새우',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -450,7 +450,7 @@ export const mockData = {
       changePrice: -93,
     },
     {
-      id: 45,
+      ingredientId: 45,
       name: '오징어',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -460,7 +460,7 @@ export const mockData = {
       changePrice: 71,
     },
     {
-      id: 46,
+      ingredientId: 46,
       name: '문어',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -470,7 +470,7 @@ export const mockData = {
       changePrice: -90,
     },
     {
-      id: 47,
+      ingredientId: 47,
       name: '낙지',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -480,7 +480,7 @@ export const mockData = {
       changePrice: 75,
     },
     {
-      id: 48,
+      ingredientId: 48,
       name: '조개',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -490,7 +490,7 @@ export const mockData = {
       changePrice: -26,
     },
     {
-      id: 49,
+      ingredientId: 49,
       name: '굴',
       retailUnit: 'g',
       retailUnitsize: '100',
@@ -500,7 +500,7 @@ export const mockData = {
       changePrice: 51,
     },
     {
-      id: 50,
+      ingredientId: 50,
       name: '전복',
       retailUnit: 'g',
       retailUnitsize: '100',
