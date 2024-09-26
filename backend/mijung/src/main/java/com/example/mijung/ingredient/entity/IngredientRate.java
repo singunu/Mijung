@@ -8,6 +8,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDate;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -43,4 +44,16 @@ public class IngredientRate {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ingredient_id", nullable = false)
     private Ingredient ingredient;
+
+    @Builder
+    public IngredientRate(Integer id, LocalDate date, Float weekIncreaseRate, Integer weekIncreasePrice,
+                          Ingredient ingredient) {
+        this.id = id;
+        this.date = date;
+        this.weekIncreaseRate = weekIncreaseRate;
+        this.weekIncreasePrice = weekIncreasePrice;
+        this.ingredient = ingredient;
+    }
+
+    ;
 }

@@ -1,6 +1,5 @@
 package com.example.mijung.ingredient.entity;
 
-import com.example.mijung.recipe.entity.Recipe;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -9,6 +8,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDate;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -29,4 +29,12 @@ public class IngredientInfo {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ingredient_id", nullable = false)
     private Ingredient ingredient;
+
+    @Builder
+    public IngredientInfo(Integer id, LocalDate date, Integer price, Ingredient ingredient) {
+        this.id = id;
+        this.date = date;
+        this.price = price;
+        this.ingredient = ingredient;
+    }
 }
