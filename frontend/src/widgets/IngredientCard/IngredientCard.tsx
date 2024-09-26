@@ -25,7 +25,6 @@ const IngredientCard = ({
   changePrice,
   width = 150,
   height = 200,
-  onAddToCart,
 }: IngredientCardProps) => {
   const navigate = useNavigate();
 
@@ -34,13 +33,11 @@ const IngredientCard = ({
     navigate(`/ingredients/${ingredientId}`);
   };
 
-  // '식탁에 추가' 버튼 클릭 시 장바구니에 추가 (현재는 콘솔 로그만 출력)
+  // '식탁에 추가' 버튼 클릭 시 장바구니에 추가
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation(); // 카드 클릭 이벤트가 발생하지 않도록 방지
-    if (onAddToCart) {
-      // 카드 클릭 이벤트가 발생하지 않도록 방지
-      onAddToCart(ingredientId);
-    }
+    console.log(`식재료 ID ${ingredientId}를 식탁에 추가했습니다.`);
+    // 여기에 실제 장바구니 추가 로직을 구현할 수 있습니다.
   };
 
   // 변화율을 절대값으로 포맷팅
@@ -92,14 +89,12 @@ const IngredientCard = ({
           )}
         </div>
         {/* 식탁에 추가 버튼 */}
-        {onAddToCart && (
-          <button
-            className="mt-2 bg-blue-500 text-white px-2 py-1 rounded text-xs hover:bg-blue-600 w-full"
-            onClick={handleAddToCart}
-          >
-            식탁에 추가
-          </button>
-        )}
+        <button
+          className="mt-2 bg-blue-500 text-white px-2 py-1 rounded text-xs hover:bg-blue-600 w-full"
+          onClick={handleAddToCart}
+        >
+          식탁에 추가
+        </button>
       </div>
     </div>
   );
