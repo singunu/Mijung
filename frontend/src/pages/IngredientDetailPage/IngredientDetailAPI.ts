@@ -2,8 +2,8 @@ import axios from 'axios';
 
 const API_BASE_URL =
   window.location.hostname === 'localhost'
-    ? `${import.meta.env.VITE_APP_DEV_URL_SPRING}:8080/api/v1` // 개발 환경의 API 주소
-    : `${import.meta.env.VITE_APP_PRODUCT_URL}/api/v1`; // 배포 환경의 API 주소
+    ? `${import.meta.env.VITE_DEV_BACKEND_URL}` // 개발 환경의 API 주소
+    : `${import.meta.env.VITE_PROD_BACKEND_URL}`; // 배포 환경의 API 주소
 
 export interface IngredientInfo {
   ingredientId: number;
