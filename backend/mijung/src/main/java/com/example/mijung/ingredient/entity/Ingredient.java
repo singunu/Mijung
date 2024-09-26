@@ -10,11 +10,15 @@ import jakarta.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Ingredient {
     @Id
@@ -48,15 +52,27 @@ public class Ingredient {
     @Column
     private String image;
 
-    @Column(name = "analyzed", nullable = false)
-    private Boolean analyzed;
+    @Column(name = "is_priced", nullable = false)
+    private Boolean isPriced;
 
     @OneToMany(mappedBy = "ingredient")
     private List<Material> material;
 
     @OneToMany(mappedBy = "ingredient", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<IngredientInfo> ingredientInfo = new ArrayList<>();
+    private List<IngredientInfo> ingredientInfos = new ArrayList<>();
 
     @OneToMany(mappedBy = "ingredient", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<IngredientRate> ingredientRates = new ArrayList<>();
+
+    public IngredientInfo getLatestIngredientInfo() {
+        return ingredientInfos.stream()
+                .max((info1, info2) -> info1.getDate().compareTo(info2.getDate()))
+                .orElse(null);
+    }
+
+    public IngredientRate getLatestIngredientRate() {
+        return ingredientRates.stream()
+                .max((rate1, rate2) -> rate1.getDate().compareTo(rate2.getDate()))
+                .orElse(null);
+    }
 }
