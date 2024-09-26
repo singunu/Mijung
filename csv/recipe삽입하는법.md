@@ -43,3 +43,6 @@ alter table recipe modify image varchar(255) after cooking_time;
 http://www.kamis.or.kr/service/price/xml.do?action=periodEcoPriceList&p_productclscode=01&p_regday=2024-09-24&p_itemcategorycode=100&p_itemcode=141&p_convert_kg_yn=Y&p_cert_key=111&p_cert_id=222&p_returntype=xml
 
 ```
+
+### 9월 26일 상황
+* cow와 vegetable을 활용해 재료 테이블을 만들고 있습니다. 내일 오전까지 다 임포트 하겠습니다.
