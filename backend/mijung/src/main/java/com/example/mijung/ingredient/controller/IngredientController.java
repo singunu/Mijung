@@ -9,7 +9,11 @@ import com.example.mijung.ingredient.dto.IngredientSearchResponse;
 import com.example.mijung.ingredient.dto.IngredientSiseRequest;
 import com.example.mijung.ingredient.service.IngredientService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/ingredients")
+@Tag(name = "식재료", description = "식재료관련 API")
 public class IngredientController {
     private final IngredientService ingredientService;
 
@@ -79,15 +84,19 @@ public class IngredientController {
     }
 
     /**
-     * 식재료 상제보기 - 정보
+     * 식재료 상세보기 - 정보
      *
      * @param ingredientId 식재료 ID
      * @return 식재료 정보를 포함하는 ResponseEntity 객체를 반환합니다. 식재료 상세보기(정보)에 실패하면 에러 코드를 담은 ResponseEntity를 반환합니다.
      */
     @GetMapping("/{ingredientId}/info")
     @Operation(summary = "식재료 상세보기 - 정보", description = "식재료 정보를 포함하는 ResponseEntity 객체를 반환합니다. 식재료 상세보기(정보)에 실패하면 에러 코드를 담은 ResponseEntity를 반환합니다.")
-    @ApiResponse(responseCode = "200", description = "성공")
-    public ResponseEntity<ResponseDTO<?>> getIngredientInfo(@PathVariable("ingredientId") Integer ingredientId) {
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "식재료 상세보기(정보) 조회 성공"),
+            @ApiResponse(responseCode = "404", description = "식재료 상세보기(정보) 조회 실패", content = @Content)
+    })
+    public ResponseEntity<ResponseDTO<IngredientInfoViewResponse>> getIngredientInfo(
+            @PathVariable("ingredientId") @Schema(description = "식재료 ID", example = "1") Integer ingredientId) {
 
         IngredientInfoViewResponse result = ingredientService.getIngredientInfo(ingredientId);
 
