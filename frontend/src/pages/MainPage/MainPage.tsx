@@ -37,25 +37,26 @@ const MainPage = () => {
     fetchIngredients();
   }, []);
 
-  const renderIngredientCards = (ingredients: IngredientPrice[]) => (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      {ingredients.map((ingredient) => (
-        <IngredientCard
-          key={ingredient.ingredientId}
-          ingredientId={ingredient.ingredientId}
-          name={ingredient.name}
-          unit={ingredient.retailUnit}
-          unitSize={ingredient.retailUnitsize}
-          image={ingredient.image}
-          price={ingredient.price}
-          changeRate={ingredient.changeRate}
-          changePrice={ingredient.changePrice}
-          width={170}
-          height={250}
-        />
-      ))}
-    </div>
-  );
+  const renderIngredientCards = (ingredients: IngredientPrice[]) => {
+    if (ingredients.length === 0) {
+      return (
+        <p className="text-center text-gray-500">
+          현재 표시할 데이터가 없습니다.
+        </p>
+      );
+    }
+
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {ingredients.map((ingredient, index) => (
+          <IngredientCard
+            key={ingredient?.ingredientId ?? `ingredient-${index}`}
+            ingredient={ingredient ?? {}}
+          />
+        ))}
+      </div>
+    );
+  };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-10">
@@ -66,17 +67,17 @@ const MainPage = () => {
 
           <section className="mb-8">
             <h2 className="text-2xl font-semibold mb-4">주간 시세</h2>
-            {renderIngredientCards(weeklyIngredients)}
+            {renderIngredientCards(weeklyIngredients ?? [])}
           </section>
 
           <section className="mb-8">
             <h2 className="text-2xl font-semibold mb-4">월간 시세</h2>
-            {renderIngredientCards(monthlyIngredients)}
+            {renderIngredientCards(monthlyIngredients ?? [])}
           </section>
 
           <section className="mb-8">
             <h2 className="text-2xl font-semibold mb-4">주요 식재료</h2>
-            {renderIngredientCards(mainIngredients)}
+            {renderIngredientCards(mainIngredients ?? [])}
           </section>
         </div>
       </MainLayout>

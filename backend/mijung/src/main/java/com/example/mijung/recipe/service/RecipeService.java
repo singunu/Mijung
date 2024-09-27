@@ -9,23 +9,42 @@ import com.example.mijung.recipe.dto.MaterialDto;
 import com.example.mijung.recipe.dto.RecipeSearchResponse;
 import com.example.mijung.recipe.dto.RecipeViewResponse;
 import com.example.mijung.recipe.dto.StepDto;
+import com.example.mijung.recipe.entity.Recipe;
+import com.example.mijung.recipe.repository.RecipeRepository;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class RecipeService {
+
+    private final RecipeRepository recipeRepository;
 
     @Transactional
     public ResponseDTO<List<RecipeListResponse>> getRecipeList(PaginationAndSearchDto dto) {
+        Pageable pageable = PageRequest.of(dto.getPage() - 1, dto.getPerPage());
 
-        List<RecipeListResponse> data = new ArrayList<>();
-        for (int i = 1; i < dto.getPerPage() + 1; i++) {
-            data.add(RecipeListResponse.of(i));
-        }
+        Page<Recipe> recipesPage = recipeRepository.findByNameContaining(resolveKeyword(dto.getKeyword()), pageable);
 
-        PaginationDTO pagination = PaginationDTO.of(20, dto.getPage(), dto.getPerPage());
+
+        List<RecipeListResponse> data = recipesPage.getContent().stream()
+                .map(RecipeListResponse::of)
+                .collect(Collectors.toList());
+
+
+        PaginationDTO pagination = PaginationDTO.of(
+                (int) recipesPage.getTotalElements(),
+                dto.getPage(),
+                dto.getPerPage()
+        );
 
         return ResponseDTO.of(data, pagination);
     }
@@ -62,4 +81,9 @@ public class RecipeService {
         return RecipeViewResponse.of(recipeId, matetials, etc, steps);
     }
 
+
+    private String resolveKeyword(String keyword) {
+        // 키워드가 null이면 빈 문자열로 처리하여 모든 레시피 조회
+        return keyword == null ? "" : keyword;
+    }
 }
