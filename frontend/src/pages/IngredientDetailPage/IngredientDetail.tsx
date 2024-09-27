@@ -23,8 +23,11 @@ const IngredientDetailPage = () => {
       try {
         if (id) {
           const data = await getIngredientInfo(Number(id));
-          setIngredient(data);
-          console.log('data is', data);
+          if (data) {
+            setIngredient(data);
+          } else {
+            console.error('식재료 정보가 없습니다.');
+          }
         }
       } catch (error) {
         console.error('식재료 정보를 가져오는 데 실패했습니다:', error);
@@ -60,14 +63,14 @@ const IngredientDetailPage = () => {
             </div>
             <div className="lg:w-3/4 flex flex-col gap-8">
               <PriceGraphCard
-                graphId={ingredient.ingredientId}
-                title={`${ingredient.name} 가격 추이`}
+                graphId={ingredient.ingredientId ?? 0}
+                title={`${ingredient.name ?? '알 수 없음'} 가격 추이`}
                 width={600}
                 height={200}
               />
               <NetworkGraphCard
-                graphId={ingredient.ingredientId}
-                title={`${ingredient.name} 관련 네트워크`}
+                graphId={ingredient.ingredientId ?? 0}
+                title={`${ingredient.name ?? '알 수 없음'} 관련 네트워크`}
                 width={600}
                 height={200}
               />
