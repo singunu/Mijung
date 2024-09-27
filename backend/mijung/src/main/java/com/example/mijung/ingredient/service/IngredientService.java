@@ -42,7 +42,7 @@ public class IngredientService {
         Pageable pageable = PageRequest.of(dto.getPage() - 1, dto.getPerPage());
 
         // DB에서 카테고리와 키워드에 맞는 식재료 데이터를 페이징하여 조회
-        Page<Ingredient> ingredientsPage = ingredientRepository.findByItemCategoryNameContainingAndItemNameContaining(
+        Page<Ingredient> ingredientsPage = ingredientRepository.findByItemCategoryCodeContainingAndItemNameContaining(
                 resolveCategory(dto.getCategory()),
                 resolveKeyword(dto.getKeyword()),
                 pageable
@@ -152,7 +152,7 @@ public class IngredientService {
             return "";
         }
         if (!validCategories.contains(category)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, INGREDIENT_NOT_FOUND.getMessage());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 카테고리 입력입니다.");
         }
         return category;
     }
