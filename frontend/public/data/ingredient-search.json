@@ -2,13 +2,13 @@
   "data": [
     {
       "ingredientId": 1,
-      "name": "감자",
-      "retailUnit": "g",
-      "retailUnitsize": "100",
-      "image": "https://recipe1.ezmember.co.kr/cache/bbs/2016/08/25/e1ecc151809f90a265886b51e9a44bd9.jpg",
-      "price": "900",
-      "changeRate": 5,
-      "changePrice": 3
+      "name": "감자감자",
+      "retailUnit": "",
+      "retailUnitsize": "",
+      "image": "",
+      "price": null,
+      "changeRate": null,
+      "changePrice": null
     },
     {
       "ingredientId": 2,
