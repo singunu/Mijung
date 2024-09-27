@@ -46,7 +46,6 @@ public class RecipeService {
                 dto.getPerPage()
         );
 
-
         return ResponseDTO.of(data, pagination);
     }
 
