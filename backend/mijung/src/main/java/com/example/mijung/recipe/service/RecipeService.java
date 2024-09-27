@@ -36,12 +36,7 @@ public class RecipeService {
 
 
         List<RecipeListResponse> data = recipesPage.getContent().stream()
-                .map(recipe -> RecipeListResponse.builder()
-                        .recipeId(recipe.getId())
-                        .name(recipe.getName())
-                        .kind(recipe.getKind().getDisplayName())
-                        .image(recipe.getImage())
-                        .build())
+                .map(RecipeListResponse::of)
                 .collect(Collectors.toList());
 
 
