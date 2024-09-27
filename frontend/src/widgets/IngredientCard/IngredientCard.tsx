@@ -21,12 +21,14 @@ const IngredientCard = ({
     onAddToCart?.(ingredient.ingredientId);
   };
 
-  const formatChange = (value: number) => {
+  const formatChange = (value: number | undefined) => {
+    if (value === undefined) return '가격 등락 정보 없음';
     const absValue = Math.abs(value).toFixed(1);
     return `${absValue}%`;
   };
 
-  const formatPrice = (price: string | number) => {
+  const formatPrice = (price: string | number | undefined) => {
+    if (price === undefined) return '가격 정보 없음';
     return `${Number(price).toLocaleString()}원`;
   };
 
