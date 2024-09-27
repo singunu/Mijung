@@ -46,7 +46,10 @@ public class IngredientController {
 
         ResponseDTO<List<IngredientInfoViewResponse>> result = ingredientService.getIngredientList(dto);
 
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        HttpStatus status = result.getData().isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
+
+        return ResponseEntity.status(status).body(result);
+
     }
 
     /**
