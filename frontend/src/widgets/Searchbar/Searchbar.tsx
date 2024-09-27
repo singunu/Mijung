@@ -10,12 +10,11 @@
 또는
 <Searchbar type="recipes" />
  */
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   getIngredientAutoComplete,
   getRecipeAutoComplete,
-  searchRecipes,
 } from './SearchbarAPI';
 
 interface SearchbarProps {
@@ -32,6 +31,19 @@ const Searchbar = ({ type, onSearch }: SearchbarProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
+  const fetchAutoComplete = useCallback(async () => {
+    try {
+      const data =
+        type === 'ingredients'
+          ? await getIngredientAutoComplete(keyword)
+          : await getRecipeAutoComplete(keyword);
+      setSuggestions(data);
+      setIsDropdownOpen(true);
+    } catch (error) {
+      console.error('자동완성 데이터를 가져오는 중 오류 발생:', error);
+    }
+  }, [keyword, type]);
+
   useEffect(() => {
     if (keyword.length > 0) {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -46,20 +58,7 @@ const Searchbar = ({ type, onSearch }: SearchbarProps) => {
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, [keyword]);
-
-  const fetchAutoComplete = async () => {
-    try {
-      const data =
-        type === 'ingredients'
-          ? await getIngredientAutoComplete(keyword)
-          : await getRecipeAutoComplete(keyword);
-      setSuggestions(data);
-      setIsDropdownOpen(true);
-    } catch (error) {
-      console.error('자동완성 데이터를 가져오는 중 오류 발생:', error);
-    }
-  };
+  }, [keyword, fetchAutoComplete]);
 
   const handleSearch = () => {
     onSearch(keyword);
