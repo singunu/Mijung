@@ -7,21 +7,24 @@ export const IngredientList = () => {
 
   if (isLoading) return <div>로딩 중...</div>;
   if (error) return <Error />;
+  if (!data || !data.ingredients) return <div>데이터가 없습니다.</div>;
 
   return (
     <>
       <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {data?.ingredients.map((ingredient) => (
+        {data.ingredients.map((ingredient) => (
           <li key={ingredient.ingredientId}>
             <IngredientCard ingredient={ingredient} />
           </li>
         ))}
       </ul>
-      <div>
-        <span>
-          총 {data?.pagination.total} 중 {data?.pagination.page} 페이지
-        </span>
-      </div>
+      {data.pagination && (
+        <div>
+          <span>
+            총 {data.pagination.total} 중 {data.pagination.page} 페이지
+          </span>
+        </div>
+      )}
     </>
   );
 };
