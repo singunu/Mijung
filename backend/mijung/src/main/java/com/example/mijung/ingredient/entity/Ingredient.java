@@ -43,11 +43,14 @@ public class Ingredient {
     @Column(name = "kind_name", nullable = false, length = 20)
     private String kindName;
 
-    @Column(name = "retail_unit", nullable = false, length = 10)
+    @Column(name = "retail_unit", length = 10)
     private String retailUnit;
 
-    @Column(name = "retail_unitsize", nullable = false, length = 10)
+    @Column(name = "retail_unitsize", length = 10)
     private String retailUnitsize;
+
+    @Column(name="product_rank_code", nullable = false, length=3)
+    private String productRankCode;
 
     @Column
     private String image;
