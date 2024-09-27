@@ -133,7 +133,9 @@ public class IngredientController {
 
         List<RecipeListResponse> result = ingredientService.getIngredientRecommendRecipe(ingredientId);
 
-        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.from(result));
+        HttpStatus status = result.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
+
+        return ResponseEntity.status(status).body(ResponseDTO.from(result));
     }
 
 }

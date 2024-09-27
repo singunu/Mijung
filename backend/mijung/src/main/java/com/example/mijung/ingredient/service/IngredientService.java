@@ -13,14 +13,16 @@ import com.example.mijung.ingredient.dto.IngredientSiseRequest;
 import com.example.mijung.ingredient.entity.Ingredient;
 import com.example.mijung.ingredient.entity.IngredientInfo;
 import com.example.mijung.ingredient.entity.IngredientRate;
-import com.example.mijung.ingredient.repository.IngredientInfoRepository;
-import com.example.mijung.ingredient.repository.IngredientRateRepository;
 import com.example.mijung.ingredient.repository.IngredientRepository;
+import com.example.mijung.recipe.entity.Recipe;
+import com.example.mijung.recipe.repository.RecipeRepository;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -31,6 +33,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class IngredientService {
 
     private final IngredientRepository ingredientRepository;
+    private final RecipeRepository recipeRepository;
 
     @Transactional
     public ResponseDTO<List<IngredientInfoViewResponse>> getIngredientList(PaginationAndFilteringDto dto) {
@@ -72,14 +75,15 @@ public class IngredientService {
 
         Ingredient ingredient = getIngredient(ingredientId);
 
-        if(!ingredient.getIsPriced()){
+        if (!ingredient.getIsPriced()) {
             return IngredientInfoViewResponse.of(ingredient);
         }
 
         IngredientInfo ingredientInfo = ingredient.getLatestIngredientInfo();
         IngredientRate ingredientRate = ingredient.getLatestIngredientRate();
 
-        return IngredientInfoViewResponse.of(ingredient, ingredientInfo.getPrice(), ingredientRate.getWeekIncreaseRate(), ingredientRate.getWeekIncreasePrice());
+        return IngredientInfoViewResponse.of(ingredient, ingredientInfo.getPrice(),
+                ingredientRate.getWeekIncreaseRate(), ingredientRate.getWeekIncreasePrice());
     }
 
     @Transactional
@@ -103,17 +107,29 @@ public class IngredientService {
     @Transactional
     public List<RecipeListResponse> getIngredientRecommendRecipe(Integer ingredientId) {
 
-        List<RecipeListResponse> data = new ArrayList<>();
-        for (int i = 1; i < 3; i++) {
-            data.add(RecipeListResponse.of(i));
-        }
+        Ingredient ingredient = getIngredient(ingredientId);
 
-        return data;
+        List<Recipe> recipes = recipeRepository.findByMaterialsIngredientId(ingredientId);
+
+        List<Recipe> randomRecipes = getRandomRecipes(recipes);
+
+        return convertToRecipeListResponse(randomRecipes);
     }
-
 
     public Ingredient getIngredient(Integer ingredientId) {
         return ingredientRepository.findById(ingredientId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, INGREDIENT_NOT_FOUND.getMessage()));
+                .orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND, INGREDIENT_NOT_FOUND.getMessage()));
+    }
+
+    private List<Recipe> getRandomRecipes(List<Recipe> recipes) {
+        Collections.shuffle(recipes);
+        return recipes.stream().limit(3).toList();
+    }
+
+    private List<RecipeListResponse> convertToRecipeListResponse(List<Recipe> recipes) {
+        return recipes.stream()
+                .map(RecipeListResponse::of)
+                .collect(Collectors.toList());
     }
 }
