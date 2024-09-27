@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import MainPage from '../pages/MainPage/MainPage';
 import IngredientListPage from '../pages/IngredientListPage/IngredientList';
 import IngredientDetailPage from '../pages/IngredientDetailPage/IngredientDetail';
-import RecipeDetailPage from '../pages/RecipeDetailPage/RecipeDetail';
+import { RecipeDetailPage } from '../pages/RecipeDetailPage/RecipeDetail';
 import RecipeJjimPage from '../pages/RecipeJjimPage/RecipeJjimDetail';
 import Layout from './RoutingLayout/Layout';
 import { Error } from '../shared/components';
