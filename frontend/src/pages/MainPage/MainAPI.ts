@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_DEV_BACKEND_URL;
+const API_BASE_URL = import.meta.env.VITE_DEV_BACKEND_API_URL;
 
 export interface MainPageRequest {
   period: 'year' | 'month' | 'week';

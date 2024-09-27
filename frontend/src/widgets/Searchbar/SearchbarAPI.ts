@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { mockData } from '../../shared/api/mock';
 
-const API_BASE_URL = import.meta.env.VITE_DEV_BACKEND_URL;
+const API_BASE_URL = import.meta.env.VITE_DEV_BACKEND_API_URL;
 const USE_MOCK_API = import.meta.env.VITE_USE_MOCK_API === 'true';
 
 interface SearchParams {
