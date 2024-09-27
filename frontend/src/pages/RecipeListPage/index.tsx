@@ -1,7 +1,8 @@
-import SideLayout from '../../app/RoutingLayout/SideLayout';
-import MainLayout from '../../app/RoutingLayout/MainLayout';
-import Searchbar from '../../widgets/Searchbar/Searchbar';
-import { RecipeList } from '../../features/recipeList/ui/RecipeList';
+import SideLayout from '@/app/RoutingLayout/SideLayout';
+import MainLayout from '@/app/RoutingLayout/MainLayout';
+import Searchbar from '@/widgets/Searchbar/Searchbar';
+import { RecipeList } from '@/features/recipeList/ui/RecipeList';
+import { RecipeSearchBar } from '@/features/recipeList/ui/RecipeSearchBar';
 
 export const RecipeListPage = () => {
   return (
@@ -24,6 +25,7 @@ export const RecipeListPage = () => {
           </div>
         </div> */}
         <RecipeList />
+        <RecipeSearchBar />
       </MainLayout>
       <SideLayout />
     </div>

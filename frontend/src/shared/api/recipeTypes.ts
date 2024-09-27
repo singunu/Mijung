@@ -11,7 +11,11 @@ export interface PaginationInfo {
   perPage: number;
 }
 
-export interface RecipeResponse {
+export interface RecipeListResponse {
   data: Recipe[];
   pagination: PaginationInfo;
+}
+
+export interface RecipeSearchResponse {
+  data: Recipe[];
 }
