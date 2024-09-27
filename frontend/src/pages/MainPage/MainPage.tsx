@@ -37,16 +37,26 @@ const MainPage = () => {
     fetchIngredients();
   }, []);
 
-  const renderIngredientCards = (ingredients: IngredientPrice[]) => (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      {ingredients?.map((ingredient) => (
-        <IngredientCard
-          key={ingredient?.ingredientId ?? `ingredient-${Math.random()}`}
-          ingredient={ingredient ?? {}}
-        />
-      )) ?? <p>데이터를 불러오는 중입니다...</p>}
-    </div>
-  );
+  const renderIngredientCards = (ingredients: IngredientPrice[]) => {
+    if (ingredients.length === 0) {
+      return (
+        <p className="text-center text-gray-500">
+          현재 표시할 데이터가 없습니다.
+        </p>
+      );
+    }
+
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {ingredients.map((ingredient, index) => (
+          <IngredientCard
+            key={ingredient?.ingredientId ?? `ingredient-${index}`}
+            ingredient={ingredient ?? {}}
+          />
+        ))}
+      </div>
+    );
+  };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-10">
