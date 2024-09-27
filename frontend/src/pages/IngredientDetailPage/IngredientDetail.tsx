@@ -25,7 +25,6 @@ const IngredientDetailPage = () => {
           const data = await getIngredientInfo(Number(id));
           setIngredient(data);
           console.log('data is', data);
-          console.log('ingredient is', ingredient);
         }
       } catch (error) {
         console.error('식재료 정보를 가져오는 데 실패했습니다:', error);
@@ -34,6 +33,13 @@ const IngredientDetailPage = () => {
 
     fetchIngredientInfo();
   }, [id]);
+
+  // ingredient에 response가 들어왔을 때 체크용
+  useEffect(() => {
+    if (ingredient) {
+      console.log('ingredient is', ingredient);
+    }
+  }, [ingredient]);
 
   if (!ingredient) {
     return <div>로딩 중...</div>;
@@ -50,30 +56,19 @@ const IngredientDetailPage = () => {
           </h1>
           <div className="flex flex-col lg:flex-row gap-8">
             <div className="lg:w-1/4">
-              <IngredientCard
-                ingredientId={ingredient.ingredientId}
-                name={ingredient.name}
-                unit={ingredient.retailUnit}
-                unitSize={ingredient.retailUnitsize}
-                image={ingredient.image}
-                price={ingredient.price}
-                changeRate={ingredient.changeRate}
-                changePrice={ingredient.changePrice}
-                width="100%"
-                height={300}
-              />
+              <IngredientCard ingredient={ingredient} />
             </div>
             <div className="lg:w-3/4 flex flex-col gap-8">
               <PriceGraphCard
                 graphId={ingredient.ingredientId}
                 title={`${ingredient.name} 가격 추이`}
-                width="100%"
+                width={600}
                 height={200}
               />
               <NetworkGraphCard
                 graphId={ingredient.ingredientId}
                 title={`${ingredient.name} 관련 네트워크`}
-                width="100%"
+                width={600}
                 height={200}
               />
             </div>
