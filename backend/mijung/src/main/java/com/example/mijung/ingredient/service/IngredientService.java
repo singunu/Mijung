@@ -13,7 +13,6 @@ import com.example.mijung.ingredient.dto.IngredientSiseRequest;
 import com.example.mijung.ingredient.entity.Ingredient;
 import com.example.mijung.ingredient.entity.IngredientInfo;
 import com.example.mijung.ingredient.entity.IngredientRate;
-import com.example.mijung.ingredient.enums.CategoryMassage;
 import com.example.mijung.ingredient.enums.IngredientMassage;
 import com.example.mijung.ingredient.repository.IngredientRepository;
 import jakarta.transaction.Transactional;
@@ -22,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -154,7 +152,7 @@ public class IngredientService {
             return "";
         }
         if (!validCategories.contains(category)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, CategoryMassage.CATEGORY_NOT_FOUND.getMessage());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, IngredientMassage.CATEGORY_NOT_FOUND.getMessage());
         }
         return category;
     }
