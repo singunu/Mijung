@@ -52,12 +52,13 @@ public class RecipeService {
     @Transactional
     public List<RecipeSearchResponse> getRecipeSearch(String search) {
 
-        List<RecipeSearchResponse> data = new ArrayList<>();
-        for (int i = 1; i < 6; i++) {
-            data.add(RecipeSearchResponse.of(i, search));
-        }
+        Pageable pageable = PageRequest.of(0, 5);
 
-        return data;
+        Page<Recipe> recipesPage = recipeRepository.findByNameContaining(search, pageable);
+
+        return recipesPage.getContent().stream()
+                .map(recipe -> RecipeSearchResponse.of(recipe.getId(), recipe.getName()))
+                .collect(Collectors.toList());
     }
 
     @Transactional
