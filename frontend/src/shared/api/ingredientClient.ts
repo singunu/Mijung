@@ -10,8 +10,12 @@ export default class IngredientClient {
   }
 
   // 재료 목록을 가져오는 메서드
-  async getIngredients(params: { page?: number; perPage?: number }) {
-    return axios.get<IngredientResponse>(`${this.baseURL}/ingredient`, {
+  async getIngredients(params: {
+    page?: number;
+    perPage?: number;
+    category?: string;
+  }) {
+    return axios.get<IngredientResponse>(`${this.baseURL}/ingredients/search`, {
       params,
     });
   }

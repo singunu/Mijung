@@ -18,7 +18,7 @@ const categories = [
 const IngredientListPage = () => {
   const [category, setCategory] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
-  const { isLoading, error } = useIngredients(currentPage);
+  const { isLoading, error } = useIngredients(currentPage, 10, category);
 
   const handleCategoryChange = (newCategory: string) => {
     setCategory(newCategory);
@@ -44,7 +44,10 @@ const IngredientListPage = () => {
                 className={`px-4 py-2 rounded ${
                   category === cat.id ? 'bg-blue-500 text-white' : 'bg-gray-200'
                 }`}
-                onClick={() => handleCategoryChange(cat.id)}
+                onClick={() => {
+                  handleCategoryChange(cat.id);
+                  console.log('카테고리 id: ', cat.id);
+                }}
               >
                 {cat.name}
               </button>
