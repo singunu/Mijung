@@ -22,7 +22,7 @@ public class RecipeService {
 
         List<RecipeListResponse> data = new ArrayList<>();
         for (int i = 1; i < dto.getPerPage() + 1; i++) {
-            data.add(RecipeListResponse.of(i));
+            data.add(RecipeListResponse.test(i));
         }
 
         PaginationDTO pagination = PaginationDTO.of(20, dto.getPage(), dto.getPerPage());
