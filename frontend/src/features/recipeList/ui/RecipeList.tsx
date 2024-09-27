@@ -1,8 +1,8 @@
-import { Error } from '../../../shared/components';
-import { useRecipes } from '../api/useRecipes';
+import { Error } from '@/shared/components';
+import { useRecipeList } from '../api/useRecipeList';
 
 export const RecipeList = () => {
-  const { data, isLoading, error } = useRecipes();
+  const { data, isLoading, error } = useRecipeList();
 
   if (isLoading) return <div>Loding...</div>;
   if (error)
