@@ -1,40 +1,62 @@
+import { useState } from 'react';
 import SideLayout from '../../app/RoutingLayout/SideLayout';
 import MainLayout from '../../app/RoutingLayout/MainLayout';
 import Searchbar from '../../widgets/Searchbar/Searchbar';
+import { IngredientList } from '../../features/ingredientList/ui/IngredientList';
+import { useIngredients } from '../../features/ingredientList/api/useIngredients';
 
-import { Link } from 'react-router-dom';
+const categories = [
+  { id: 'all', name: '전체' },
+  { id: '100', name: '식량작물' },
+  { id: '200', name: '채소류' },
+  { id: '300', name: '특용작물' },
+  { id: '400', name: '과일류' },
+  { id: '500', name: '축산물' },
+  { id: '600', name: '수산물' },
+];
 
 const IngredientListPage = () => {
-  const ingredients = [
-    { id: 1, name: '쌀', description: '한국 요리의 기본이 되는 주식입니다.' },
-    { id: 2, name: '김치', description: '한국의 대표적인 발효 식품입니다.' },
-    { id: 3, name: '고추장', description: '매콤한 맛을 내는 발효 양념입니다.' },
-    { id: 4, name: '된장', description: '구수한 맛을 내는 발효 양념입니다.' },
-    { id: 5, name: '간장', description: '짭짤한 맛을 내는 필수 양념입니다.' },
-    { id: 6, name: '마늘', description: '향긋한 맛을 더해주는 향신료입니다.' },
-  ];
+  const [category, setCategory] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const { isLoading, error } = useIngredients(currentPage);
+
+  const handleCategoryChange = (newCategory: string) => {
+    setCategory(newCategory);
+    setCurrentPage(1);
+  };
+
+  const handleSearch = (keyword: string) => {
+    // 검색 기능 구현
+    console.log(keyword); // build용 임시 코드
+  };
 
   return (
     <div className="grid grid-cols-10">
       <SideLayout />
       <MainLayout>
-        <Searchbar type="ingredients" />
+        <Searchbar type="ingredients" onSearch={handleSearch} />
         <div className="container mx-auto px-4 py-8">
           <h1 className="text-3xl font-bold mb-6">재료 목록</h1>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {ingredients.map((ingredient) => (
-              <Link
-                key={ingredient.id}
-                to={`/ingredients/${ingredient.id}`}
-                className="bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-300"
+          <div className="flex space-x-2 mb-4">
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                className={`px-4 py-2 rounded ${
+                  category === cat.id ? 'bg-blue-500 text-white' : 'bg-gray-200'
+                }`}
+                onClick={() => handleCategoryChange(cat.id)}
               >
-                <h2 className="text-xl font-semibold mb-2">
-                  {ingredient.name}
-                </h2>
-                <p className="text-gray-600">{ingredient.description}</p>
-              </Link>
+                {cat.name}
+              </button>
             ))}
           </div>
+          {isLoading ? (
+            <p>로딩 중...</p>
+          ) : error ? (
+            <p>오류가 발생했습니다.</p>
+          ) : (
+            <IngredientList />
+          )}
         </div>
       </MainLayout>
       <SideLayout />

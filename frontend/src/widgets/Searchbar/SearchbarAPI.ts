@@ -1,19 +1,20 @@
 import axios from 'axios';
 import { mockData } from '../../shared/api/mock';
 
-const API_BASE_URL = '/api/v1';
+const API_BASE_URL = import.meta.env.VITE_DEV_BACKEND_URL;
 const USE_MOCK_API = import.meta.env.VITE_USE_MOCK_API === 'true';
 
 interface SearchParams {
-  keyword: string;
+  category: string;
   page: number;
   perPage: number;
+  keyword: string | null;
 }
 
 // API 함수
 export const getIngredientAutoComplete = async (search: string) => {
   if (USE_MOCK_API) {
-    return mockData.ingredients.filter((item) => item.name.includes(search));
+    return mockData.data.filter((item) => item.name.includes(search));
   }
 
   try {
@@ -44,13 +45,14 @@ export const getRecipeAutoComplete = async (search: string) => {
 };
 
 export const searchIngredients = async ({
-  keyword,
+  category,
   page,
   perPage,
+  keyword,
 }: SearchParams) => {
   if (USE_MOCK_API) {
-    const filteredData = mockData.ingredients.filter((item) =>
-      item.name.includes(keyword)
+    const filteredData = mockData.data.filter((item) =>
+      item.name.includes(keyword || '')
     );
     return {
       data: filteredData.slice((page - 1) * perPage, page * perPage),
@@ -64,7 +66,7 @@ export const searchIngredients = async ({
 
   try {
     const response = await axios.get(`${API_BASE_URL}/ingredients/search`, {
-      params: { keyword, page, perPage },
+      params: { category, page, perPage, keyword },
     });
     return response.data;
   } catch (error) {
@@ -80,7 +82,7 @@ export const searchRecipes = async ({
 }: SearchParams) => {
   if (USE_MOCK_API) {
     const filteredData = mockData.recipes.filter((item) =>
-      item.name.includes(keyword)
+      item.name.includes(keyword ?? '')
     );
     return {
       data: filteredData.slice((page - 1) * perPage, page * perPage),

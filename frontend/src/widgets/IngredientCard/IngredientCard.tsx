@@ -1,17 +1,15 @@
 import { useNavigate } from 'react-router-dom';
-import { IngredientInfo } from './IngredientCardAPI';
+import { Ingredient } from '../../shared/api/ingredientTypes';
 
 interface IngredientCardProps {
-  ingredient: IngredientInfo;
-  width?: number;
-  height?: number;
+  ingredient: Ingredient;
+  onAddToCart?: (id: number) => void;
 }
 
 const IngredientCard = ({
   ingredient,
-  width = 150,
-  height = 200,
-}: IngredientCardProps) => {
+  onAddToCart,
+}: IngredientCardProps): JSX.Element => {
   const navigate = useNavigate();
 
   const handleCardClick = () => {
@@ -20,7 +18,7 @@ const IngredientCard = ({
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
-    console.log(`식재료 "${ingredient.name}"를 장바구니에 추가했습니다.`);
+    onAddToCart?.(ingredient.ingredientId);
   };
 
   const formatChange = (value: number) => {
@@ -35,33 +33,42 @@ const IngredientCard = ({
   return (
     <div
       className="bg-white rounded-lg shadow-md overflow-hidden cursor-pointer transition-transform hover:scale-105 flex flex-col"
-      style={{ width: `${width}px`, height: `${height}px` }}
       onClick={handleCardClick}
     >
-      <img
-        src={ingredient.image || 'default-image-url.jpg'}
-        alt={ingredient.name}
-        className="w-full h-2/5 object-cover"
-      />
+      {ingredient?.image && (
+        <img
+          src={ingredient.image}
+          alt={ingredient.name ?? '재료 이미지'}
+          className="w-full h-2/5 object-cover"
+        />
+      )}
       <div className="p-2 flex-grow flex flex-col justify-between">
         <div>
-          <h3 className="text-sm font-semibold mb-1 truncate">{`${ingredient.name} (${ingredient.retailUnitsize}${ingredient.retailUnit})`}</h3>
-          {ingredient.price ? (
+          <h3 className="text-sm font-semibold mb-1 truncate">
+            {ingredient?.name ?? '알 수 없는 재료'}{' '}
+            {ingredient?.retailUnit &&
+              ingredient?.retailUnitsize &&
+              `(${ingredient.retailUnitsize}${ingredient.retailUnit})`}
+          </h3>
+          {ingredient?.price ? (
             <>
               <p className="text-lg font-bold mb-1">
                 {formatPrice(ingredient.price)}
               </p>
-              <div
-                className={`text-xs flex items-center ${ingredient.changeRate >= 0 ? 'text-red-500' : 'text-blue-500'}`}
-              >
-                <span className="mr-1">
-                  {ingredient.changeRate >= 0 ? '▲' : '▼'}
-                </span>
-                <span>{formatChange(ingredient.changeRate)}</span>
-                <span className="ml-1">
-                  ({formatPrice(Math.abs(ingredient.changePrice))})
-                </span>
-              </div>
+              {ingredient?.changeRate !== undefined &&
+                ingredient?.changePrice !== undefined && (
+                  <div
+                    className={`text-xs flex items-center ${ingredient.changeRate >= 0 ? 'text-red-500' : 'text-blue-500'}`}
+                  >
+                    <span className="mr-1">
+                      {ingredient.changeRate >= 0 ? '▲' : '▼'}
+                    </span>
+                    <span>{formatChange(ingredient.changeRate)}</span>
+                    <span className="ml-1">
+                      ({formatPrice(Math.abs(ingredient.changePrice))})
+                    </span>
+                  </div>
+                )}
             </>
           ) : (
             <p className="text-gray-500 text-xs">가격정보 없음</p>

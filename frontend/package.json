@@ -12,6 +12,8 @@
   },
   "format": "prettier --write ./src",
   "dependencies": {
+    "@tanstack/react-query": "^5.56.2",
+    "@tanstack/react-query-devtools": "^5.58.0",
     "autoprefixer": "^10.4.20",
     "axios": "^1.7.7",
     "daisyui": "^4.12.10",
@@ -20,6 +22,7 @@
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.26.1",
     "tailwindcss": "^3.4.10",
+    "underscore": "^1.13.7",
     "zustand": "^4.5.5"
   },
   "devDependencies": {
@@ -29,6 +32,7 @@
     "@types/eslint__js": "^8.42.3",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
+    "@types/underscore": "^1.11.15",
     "@vite-pwa/assets-generator": "^0.2.6",
     "@vitejs/plugin-react": "^4.3.1",
     "eslint": "^9.9.1",

@@ -10,20 +10,19 @@
 또는
 <Searchbar type="recipes" />
  */
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   getIngredientAutoComplete,
   getRecipeAutoComplete,
-  searchIngredients,
-  searchRecipes,
 } from './SearchbarAPI';
 
 interface SearchbarProps {
   type: 'ingredients' | 'recipes';
+  onSearch: (keyword: string) => void;
 }
 
-const Searchbar = ({ type }: SearchbarProps) => {
+const Searchbar = ({ type, onSearch }: SearchbarProps) => {
   const navigate = useNavigate();
   const [keyword, setKeyword] = useState('');
   const [suggestions, setSuggestions] = useState<
@@ -31,6 +30,19 @@ const Searchbar = ({ type }: SearchbarProps) => {
   >([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const fetchAutoComplete = useCallback(async () => {
+    try {
+      const data =
+        type === 'ingredients'
+          ? await getIngredientAutoComplete(keyword)
+          : await getRecipeAutoComplete(keyword);
+      setSuggestions(data);
+      setIsDropdownOpen(true);
+    } catch (error) {
+      console.error('자동완성 데이터를 가져오는 중 오류 발생:', error);
+    }
+  }, [keyword, type]);
 
   useEffect(() => {
     if (keyword.length > 0) {
@@ -46,37 +58,11 @@ const Searchbar = ({ type }: SearchbarProps) => {
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, [keyword]);
+  }, [keyword, fetchAutoComplete]);
 
-  const fetchAutoComplete = async () => {
-    try {
-      const data =
-        type === 'ingredients'
-          ? await getIngredientAutoComplete(keyword)
-          : await getRecipeAutoComplete(keyword);
-      setSuggestions(data);
-      setIsDropdownOpen(true);
-    } catch (error) {
-      console.error('자동완성 데이터를 가져오는 중 오류 발생:', error);
-    }
-  };
-
-  const handleSearch = async () => {
-    try {
-      if (type === 'ingredients') {
-        const result = await searchIngredients({
-          keyword,
-          page: 1,
-          perPage: 8,
-        });
-        console.log('식재료 검색 결과:', result);
-      } else {
-        const result = await searchRecipes({ keyword, page: 1, perPage: 8 });
-        console.log('레시피 검색 결과:', result);
-      }
-    } catch (error) {
-      console.error('검색 중 오류 발생:', error);
-    }
+  const handleSearch = () => {
+    onSearch(keyword);
+    setIsDropdownOpen(false);
   };
 
   const handleItemClick = (item: { id: number; word: string }) => {

@@ -1,8 +1,9 @@
-import { RouterProvider } from 'react-router-dom';
 import { router } from './AppRouter';
+import { Providers } from './providers';
+import { queryClient } from '../shared/query/query-client';
 
 const App = () => {
-  return <RouterProvider router={router} />;
+  return <Providers router={router} client={queryClient} />;
 };
 
 export default App;

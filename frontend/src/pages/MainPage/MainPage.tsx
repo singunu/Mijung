@@ -2,56 +2,45 @@ import { useState, useEffect } from 'react';
 import SideLayout from '../../app/RoutingLayout/SideLayout';
 import MainLayout from '../../app/RoutingLayout/MainLayout';
 import IngredientCard from '../../widgets/IngredientCard/IngredientCard';
-import { IngredientInfo } from '../../widgets/IngredientCard/IngredientCardAPI';
-import { mockData } from '../../shared/api/mock';
-
-const USE_MOCK_API = import.meta.env.VITE_USE_MOCK_API === 'true';
+import { getIngredientPrices, IngredientPrice } from './MainAPI';
 
 const MainPage = () => {
-  const [weeklyIngredients, setWeeklyIngredients] = useState<IngredientInfo[]>(
+  const [weeklyIngredients, setWeeklyIngredients] = useState<IngredientPrice[]>(
     []
   );
   const [monthlyIngredients, setMonthlyIngredients] = useState<
-    IngredientInfo[]
+    IngredientPrice[]
   >([]);
-  const [mainIngredients, setMainIngredients] = useState<IngredientInfo[]>([]);
+  const [mainIngredients, setMainIngredients] = useState<IngredientPrice[]>([]);
 
   useEffect(() => {
     const fetchIngredients = async () => {
-      if (USE_MOCK_API) {
-        const ingredients = mockData.ingredients.map((ingredient) => ({
-          ingredientId: ingredient.id,
-          name: ingredient.name,
-          retailUnit: ingredient.retailUnit,
-          retailUnitsize: ingredient.retailUnitsize,
-          image: ingredient.image,
-          price: ingredient.price,
-          changeRate: ingredient.changeRate,
-          changePrice: ingredient.changePrice,
-        }));
+      try {
+        const [weekly, monthly, main] = await Promise.all([
+          getIngredientPrices({ period: 'week', change: 'positive', count: 6 }),
+          getIngredientPrices({
+            period: 'month',
+            change: 'positive',
+            count: 4,
+          }),
+          getIngredientPrices({ period: 'year', change: 'positive', count: 4 }),
+        ]);
 
-        setWeeklyIngredients(ingredients.slice(0, 6));
-        setMonthlyIngredients(ingredients.slice(6, 10));
-        setMainIngredients(ingredients.slice(10, 14));
-      } else {
-        // 실제 API 호출 (아직 구현되지 않음)
-        console.log('실제 API 호출이 필요합니다.');
-        // TODO: 실제 API 호출 구현
+        setWeeklyIngredients(weekly);
+        setMonthlyIngredients(monthly);
+        setMainIngredients(main);
+      } catch (error) {
+        console.error('식재료 데이터 가져오기 실패:', error);
       }
     };
 
     fetchIngredients();
   }, []);
 
-  const renderIngredientCards = (ingredients: IngredientInfo[]) => (
+  const renderIngredientCards = (ingredients: IngredientPrice[]) => (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       {ingredients.map((ingredient) => (
-        <IngredientCard
-          key={ingredient.ingredientId}
-          ingredient={ingredient}
-          width={170}
-          height={250}
-        />
+        <IngredientCard key={ingredient.ingredientId} ingredient={ingredient} />
       ))}
     </div>
   );
