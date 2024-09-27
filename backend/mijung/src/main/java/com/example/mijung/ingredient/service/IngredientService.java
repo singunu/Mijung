@@ -13,6 +13,7 @@ import com.example.mijung.ingredient.dto.IngredientSiseRequest;
 import com.example.mijung.ingredient.entity.Ingredient;
 import com.example.mijung.ingredient.entity.IngredientInfo;
 import com.example.mijung.ingredient.entity.IngredientRate;
+import com.example.mijung.ingredient.enums.IngredientMassage;
 import com.example.mijung.ingredient.repository.IngredientRepository;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
@@ -152,7 +153,7 @@ public class IngredientService {
             return "";
         }
         if (!validCategories.contains(category)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "잘못된 카테고리 입력입니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, IngredientMassage.INGREDIENT_NOT_FOUND.getMessage());
         }
         return category;
     }
