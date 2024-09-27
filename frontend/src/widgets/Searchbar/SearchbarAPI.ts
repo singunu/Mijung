@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { mockData } from '../../shared/api/mock';
 
-const API_BASE_URL = 'http://localhost:8080/api/v1';
+const API_BASE_URL = import.meta.env.VITE_DEV_BACKEND_URL;
 const USE_MOCK_API = import.meta.env.VITE_USE_MOCK_API === 'true';
 
 interface SearchParams {
@@ -82,7 +82,7 @@ export const searchRecipes = async ({
 }: SearchParams) => {
   if (USE_MOCK_API) {
     const filteredData = mockData.recipes.filter((item) =>
-      item.name.includes(keyword)
+      item.name.includes(keyword ?? '')
     );
     return {
       data: filteredData.slice((page - 1) * perPage, page * perPage),

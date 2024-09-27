@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import SideLayout from '../../app/RoutingLayout/SideLayout';
 import MainLayout from '../../app/RoutingLayout/MainLayout';
 import Searchbar from '../../widgets/Searchbar/Searchbar';
-import IngredientCard from '../../widgets/IngredientCard/IngredientCard';
-import { searchIngredients } from '../../widgets/Searchbar/SearchbarAPI';
+import { IngredientList } from '../../features/ingredientList/ui/IngredientList';
+import { useIngredients } from '../../features/ingredientList/api/useIngredients';
 
 const categories = [
   { id: 'all', name: '전체' },
@@ -16,53 +16,18 @@ const categories = [
 ];
 
 const IngredientListPage = () => {
-  const [ingredients, setIngredients] = useState([]);
   const [category, setCategory] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [keyword, setKeyword] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
+  const { isLoading, error } = useIngredients(currentPage);
 
-  const fetchIngredients = async (page = 1, searchKeyword = keyword) => {
-    setIsLoading(true);
-    try {
-      const result = await searchIngredients({
-        category,
-        page,
-        perPage: 10,
-        keyword: searchKeyword,
-      });
-      console.log('API 응답:', result);
-      if (result && result.data) {
-        setIngredients(result.data);
-        setCurrentPage(result.pagination.page);
-        setTotalPages(
-          Math.ceil(result.pagination.total / result.pagination.perPage)
-        );
-      } else {
-        console.error('API 응답에 예상된 데이터가 없습니다:', result);
-        setIngredients([]);
-      }
-    } catch (error) {
-      console.error('식재료 목록을 가져오는 데 실패했습니다:', error);
-      setIngredients([]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchIngredients();
-  }, [category]);
-
-  const handleCategoryChange = (newCategory) => {
+  const handleCategoryChange = (newCategory: string) => {
     setCategory(newCategory);
     setCurrentPage(1);
   };
 
-  const handleSearch = (searchKeyword) => {
-    setKeyword(searchKeyword);
-    fetchIngredients(1, searchKeyword);
+  const handleSearch = (keyword: string) => {
+    // 검색 기능 구현
+    console.log(keyword); // build용 임시 코드
   };
 
   return (
@@ -87,43 +52,10 @@ const IngredientListPage = () => {
           </div>
           {isLoading ? (
             <p>로딩 중...</p>
-          ) : ingredients.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {ingredients.map((ingredient) => (
-                <IngredientCard
-                  key={ingredient.ingredientId}
-                  ingredientId={ingredient.ingredientId}
-                  name={ingredient.name}
-                  unit={ingredient.retailUnit}
-                  unitSize={ingredient.retailUnitsize}
-                  image={ingredient.image}
-                  price={ingredient.price}
-                  changeRate={ingredient.changeRate}
-                  changePrice={ingredient.changePrice}
-                />
-              ))}
-            </div>
+          ) : error ? (
+            <p>오류가 발생했습니다.</p>
           ) : (
-            <p>표시할 식재료가 없습니다.</p>
-          )}
-          {!isLoading && ingredients.length > 0 && (
-            <div className="mt-4 flex justify-center">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                (page) => (
-                  <button
-                    key={page}
-                    className={`mx-1 px-3 py-1 rounded ${
-                      currentPage === page
-                        ? 'bg-blue-500 text-white'
-                        : 'bg-gray-200'
-                    }`}
-                    onClick={() => fetchIngredients(page)}
-                  >
-                    {page}
-                  </button>
-                )
-              )}
-            </div>
+            <IngredientList />
           )}
         </div>
       </MainLayout>

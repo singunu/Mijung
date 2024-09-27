@@ -11,10 +11,9 @@ import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
-import org.springframework.data.jpa.repository.query.Procedure;
 
 @Entity
 @Getter
@@ -61,4 +60,18 @@ public class Recipe {
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Etc> etcs = new ArrayList<>();
+
+    @Builder
+    public Recipe(Integer id, String name, Integer hit, Integer scrapCount, Kind kind, Inbun inbun, Level level,
+                  CookingTime cookingTime, String image) {
+        this.id = id;
+        this.name = name;
+        this.hit = hit;
+        this.scrapCount = scrapCount;
+        this.kind = kind;
+        this.inbun = inbun;
+        this.level = level;
+        this.cookingTime = cookingTime;
+        this.image = image;
+    }
 }

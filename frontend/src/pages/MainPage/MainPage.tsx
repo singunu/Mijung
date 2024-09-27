@@ -39,21 +39,12 @@ const MainPage = () => {
 
   const renderIngredientCards = (ingredients: IngredientPrice[]) => (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      {ingredients.map((ingredient) => (
+      {ingredients?.map((ingredient) => (
         <IngredientCard
-          key={ingredient.ingredientId}
-          ingredientId={ingredient.ingredientId}
-          name={ingredient.name}
-          unit={ingredient.retailUnit}
-          unitSize={ingredient.retailUnitsize}
-          image={ingredient.image}
-          price={ingredient.price}
-          changeRate={ingredient.changeRate}
-          changePrice={ingredient.changePrice}
-          width={170}
-          height={250}
+          key={ingredient?.ingredientId ?? `ingredient-${Math.random()}`}
+          ingredient={ingredient ?? {}}
         />
-      ))}
+      )) ?? <p>데이터를 불러오는 중입니다...</p>}
     </div>
   );
 
@@ -66,17 +57,17 @@ const MainPage = () => {
 
           <section className="mb-8">
             <h2 className="text-2xl font-semibold mb-4">주간 시세</h2>
-            {renderIngredientCards(weeklyIngredients)}
+            {renderIngredientCards(weeklyIngredients ?? [])}
           </section>
 
           <section className="mb-8">
             <h2 className="text-2xl font-semibold mb-4">월간 시세</h2>
-            {renderIngredientCards(monthlyIngredients)}
+            {renderIngredientCards(monthlyIngredients ?? [])}
           </section>
 
           <section className="mb-8">
             <h2 className="text-2xl font-semibold mb-4">주요 식재료</h2>
-            {renderIngredientCards(mainIngredients)}
+            {renderIngredientCards(mainIngredients ?? [])}
           </section>
         </div>
       </MainLayout>
