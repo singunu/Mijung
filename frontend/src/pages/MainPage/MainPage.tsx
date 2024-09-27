@@ -40,19 +40,7 @@ const MainPage = () => {
   const renderIngredientCards = (ingredients: IngredientPrice[]) => (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       {ingredients.map((ingredient) => (
-        <IngredientCard
-          key={ingredient.ingredientId}
-          ingredientId={ingredient.ingredientId}
-          name={ingredient.name}
-          unit={ingredient.retailUnit}
-          unitSize={ingredient.retailUnitsize}
-          image={ingredient.image}
-          price={ingredient.price}
-          changeRate={ingredient.changeRate}
-          changePrice={ingredient.changePrice}
-          width={170}
-          height={250}
-        />
+        <IngredientCard key={ingredient.ingredientId} ingredient={ingredient} />
       ))}
     </div>
   );
