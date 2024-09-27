@@ -179,10 +179,28 @@
       "name": "고등어구이",
       "kind": "구이",
       "image": ""
+    },
+    {
+      "recipeId": 31,
+      "name": "김국",
+      "kind": "구이",
+      "image": ""
+    },
+    {
+      "recipeId": 32,
+      "name": "김밥",
+      "kind": "밥",
+      "image": ""
+    },
+    {
+      "recipeId": 32,
+      "name": "김말이",
+      "kind": "반찬",
+      "image": ""
     }
   ],
   "pagination": {
-    "total": 30,
+    "total": 32,
     "page": 1,
     "perPage": 30
   }

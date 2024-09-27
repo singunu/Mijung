@@ -1,14 +1,18 @@
-### csv 파일 삽입하는법
+## csv 파일 삽입하는법
+
 1. terminal을 활용해 mysql 로그인
 2. db schema 컬럼 위치 조절(csv 순서와 sql 컬럼 순서를 맞춰놔야 됨)
-    (recipe_id,name,hit,scrap_count,kind,inbun,level,cooking_time,image)
-* 컬럼 위치를 조절하는 이유는 삽입되는 ,으로 짜르고 삽입되는 순서로 들어가기 때문임. 
-3. 다음 명령어 삽입, 
+   (recipe_id,name,hit,scrap_count,kind,inbun,level,cooking_time,image)
+
+- 컬럼 위치를 조절하는 이유는 삽입되는 ,으로 짜르고 삽입되는 순서로 들어가기 때문임.
+
+3. 다음 명령어 삽입,
+
 ```mysql
 LOAD DATA LOCAL INFILE '{저장 경로}/reciperecipeCSV.csv'
 INTO TABLE recipe
 CHARACTER SET utf8
-FIELDS TERMINATED BY ',' 
+FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS
@@ -17,9 +21,10 @@ IGNORE 1 ROWS
 
 참조자료 https://k-wien1589.tistory.com/68
 
-
 ### sql 참조
-* 저는 컬럼 순서를 이렇게 바꿨는데, 팀원분들은 컬럼 순서가 어떻게 되는지 몰라서 참조해서 수정하시면 됩니다.
+
+- 저는 컬럼 순서를 이렇게 바꿨는데, 팀원분들은 컬럼 순서가 어떻게 되는지 몰라서 참조해서 수정하시면 됩니다.
+
 ```sql
 alter table recipe modify name TEXT after recipe_id;
 alter table recipe modify hit Integer after name;
@@ -35,10 +40,34 @@ alter table recipe modify cooking_time enum('MORE_THAN_2_HOURS','WITHIN_10_MINUT
 alter table recipe modify image varchar(255) after cooking_time;
 ```
 
+### ERROR 3948 (42000): Loading local data is disabled; this must be enabled on both the client and server sides 에러 나올 시 참조
+
+참조 자료 https://calen.tistory.com/49
+
+- 서버가 local-infile을 허용하고 있는지 확인
+
+```sql
+show global variables like 'local_infile';
+```
+
+- Value가 OFF이면 활성화 시키기
+
+```sql
+set global local_infile=true;
+```
+
+- 다시 로그인
+
+```sql
+mysql --local-infile -u mijung -p
+```
+
 ### 9월 25일 상황
-* cow.csv는 끝남
-* vegetable.json은 문제를 발견해서 내일 파싱을 다시해야됨.
-* * 다음과 같이 쓰면 kindcode이 없이도 모든 정보를 알 수 있다. p_itemcode만 있으면 알 수 있다..
+
+- cow.csv는 끝남
+- vegetable.json은 문제를 발견해서 내일 파싱을 다시해야됨.
+- - 다음과 같이 쓰면 kindcode이 없이도 모든 정보를 알 수 있다. p_itemcode만 있으면 알 수 있다..
+
 ```text
 http://www.kamis.or.kr/service/price/xml.do?action=periodEcoPriceList&p_productclscode=01&p_regday=2024-09-24&p_itemcategorycode=100&p_itemcode=141&p_convert_kg_yn=Y&p_cert_key=111&p_cert_id=222&p_returntype=xml
 
