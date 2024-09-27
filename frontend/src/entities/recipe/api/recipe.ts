@@ -1,6 +1,6 @@
 import FakeRecipeClient from '@/shared/api/fakeRecipeClient';
 import RecipeClient from '@/shared/api/recipeClient';
-import { PaginationInfo, Recipe } from '@/shared/api/recipeTypes';
+import { PaginationInfo, Recipe, RecipeDetail } from '@/shared/api/recipeTypes';
 import { sample, filter } from 'underscore';
 
 export default class RecipeApi {
@@ -26,12 +26,17 @@ export default class RecipeApi {
 
   async getSearchSuggestions(keyword: string): Promise<Recipe[]> {
     const res = await this.client.getSearchSuggestions(keyword);
-
+    //TODO: 아래는 Fake 만을 위한 로직으로, 실제 서비스를 위해 조건문이 필요하다.
     const randomSuggestions = sample(
       filter(res.data.data, (recipe) => recipe.name.includes(keyword)),
       5
     );
 
     return randomSuggestions;
+  }
+
+  async getRecipeDetail(recipeId: number): Promise<RecipeDetail> {
+    const res = await this.client.getRecipeDetail(recipeId);
+    return res.data.data[0];
   }
 }
