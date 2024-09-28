@@ -6,19 +6,15 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Ingredient {
     @Id
@@ -49,7 +45,7 @@ public class Ingredient {
     @Column(name = "retail_unitsize", length = 10)
     private String retailUnitsize;
 
-    @Column(name="product_rank_code", nullable = false, length=3)
+    @Column(name = "product_rank_code", nullable = false, length = 3)
     private String productRankCode;
 
     @Column
@@ -59,7 +55,7 @@ public class Ingredient {
     private Boolean isPriced;
 
     @OneToMany(mappedBy = "ingredient")
-    private List<Material> material;
+    private List<Material> materials = new ArrayList<>();
 
     @OneToMany(mappedBy = "ingredient", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<IngredientInfo> ingredientInfos = new ArrayList<>();
@@ -77,5 +73,20 @@ public class Ingredient {
         return ingredientRates.stream()
                 .max((rate1, rate2) -> rate1.getDate().compareTo(rate2.getDate()))
                 .orElse(null);
+    }
+
+    @Builder
+    public Ingredient(Integer id, String itemCategoryCode, String itemCategoryName, String itemCode, String itemName,
+                      String kindCode, String kindName, String retailUnit, String retailUnitsize, boolean isPriced) {
+        this.id = id;
+        this.itemCategoryCode = itemCategoryCode;
+        this.itemCategoryName = itemCategoryName;
+        this.itemCode = itemCode;
+        this.itemName = itemName;
+        this.kindCode = kindCode;
+        this.kindName = kindName;
+        this.retailUnit = retailUnit;
+        this.retailUnitsize = retailUnitsize;
+        this.isPriced = isPriced;
     }
 }
