@@ -12,7 +12,7 @@ public class IngredientSearchResponse {
     public static IngredientSearchResponse of(Integer ingredientId, String name) {
         return IngredientSearchResponse.builder()
                 .ingredientId(ingredientId)
-                .name(name + ingredientId)
+                .name(name)
                 .build();
     }
 }

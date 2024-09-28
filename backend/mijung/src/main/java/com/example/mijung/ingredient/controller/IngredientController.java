@@ -83,7 +83,9 @@ public class IngredientController {
 
         List<IngredientSearchResponse> result = ingredientService.getIngredientSearch(search);
 
-        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.from(result));
+        HttpStatus status = result.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
+
+        return ResponseEntity.status(status).body(ResponseDTO.from(result));
     }
 
     /**

@@ -15,6 +15,7 @@ import com.example.mijung.ingredient.entity.IngredientInfo;
 import com.example.mijung.ingredient.entity.IngredientRate;
 import com.example.mijung.ingredient.enums.IngredientMassage;
 import com.example.mijung.ingredient.repository.IngredientRepository;
+import com.example.mijung.recipe.dto.RecipeSearchResponse;
 import com.example.mijung.recipe.entity.Recipe;
 import com.example.mijung.recipe.repository.RecipeRepository;
 import jakarta.transaction.Transactional;
@@ -92,12 +93,13 @@ public class IngredientService {
     @Transactional
     public List<IngredientSearchResponse> getIngredientSearch(String search) {
 
-        List<IngredientSearchResponse> data = new ArrayList<>();
-        for (int i = 1; i < 6; i++) {
-            data.add(IngredientSearchResponse.of(i, search));
-        }
+        Pageable pageable = PageRequest.of(0, 5);
 
-        return data;
+        Page<Ingredient> ingredientsPage = ingredientRepository.findByItemNameContaining(search,pageable);
+
+        return ingredientsPage.getContent().stream()
+                .map(ingredient -> IngredientSearchResponse.of(ingredient.getId(), ingredient.getItemName()))
+                .collect(Collectors.toList());
     }
 
     @Transactional
