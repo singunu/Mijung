@@ -9,4 +9,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface IngredientRepository extends JpaRepository<Ingredient, Integer> {
     Page<Ingredient> findByItemCategoryCodeContainingAndItemNameContaining(String category, String keyword, Pageable pageable);
+    Page<Ingredient> findByItemNameContaining(String keyword, Pageable pageable);
 }
