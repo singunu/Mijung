@@ -6,11 +6,14 @@ import { IngredientSiseRequest } from '../../../shared/api/ingredientTypes';
 export const useIngredients = (
   page: number = 1,
   perPage: number = 10,
-  category: string = 'all'
+  category: string = 'all',
+  keyword: string | null = null
 ) => {
   return useQuery({
-    queryKey: ['ingredient', page, perPage, category],
-    queryFn: () => ingredientApi.getIngredients(page, perPage, category),
+    queryKey: ['ingredients', page, perPage, category, keyword],
+    queryFn: () =>
+      ingredientApi.searchIngredients({ category, page, perPage, keyword }),
+    enabled: !!category, // 카테고리가 존재할 때만 쿼리 실행
   });
 };
 
@@ -26,5 +29,13 @@ export const useIngredientInfo = (ingredientId: number) => {
   return useQuery({
     queryKey: ['ingredientInfo', ingredientId],
     queryFn: () => ingredientApi.getIngredientInfo(ingredientId),
+  });
+};
+
+export const useIngredientAutoComplete = (search: string) => {
+  return useQuery({
+    queryKey: ['ingredientAutoComplete', search],
+    queryFn: () => ingredientApi.getIngredientAutoComplete(search),
+    enabled: search.length > 0,
   });
 };

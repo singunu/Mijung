@@ -43,4 +43,19 @@ export default class IngredientClient {
       `${this.baseURL}/ingredients/${ingredientId}/info`
     );
   }
+
+  async getIngredientAutoComplete(search: string) {
+    const endpoint = `${this.baseURL}/search/${search}`;
+    console.log('API 요청 엔드포인트:', endpoint);
+    return axios.get(endpoint);
+  }
+
+  async searchIngredients(params: {
+    category: string;
+    page: number;
+    perPage: number;
+    keyword: string | null;
+  }) {
+    return axios.get(`${this.baseURL}/ingredients`, { params });
+  }
 }

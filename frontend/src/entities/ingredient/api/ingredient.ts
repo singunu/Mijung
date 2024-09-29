@@ -70,4 +70,32 @@ export default class IngredientApi {
       throw error;
     }
   }
+
+  async getIngredientAutoComplete(search: string) {
+    try {
+      const response = await this.client.getIngredientAutoComplete(search);
+      return response.data.data;
+    } catch (error) {
+      console.error('식재료 자동완성 API 오류:', error);
+      return [];
+    }
+  }
+
+  async searchIngredients(params: {
+    category: string;
+    page: number;
+    perPage: number;
+    keyword: string | null;
+  }) {
+    try {
+      const response = await this.client.searchIngredients(params);
+      return {
+        ingredients: response.data.data,
+        pagination: response.data.pagination,
+      };
+    } catch (error) {
+      console.error('식재료 검색 API 오류:', error);
+      throw error;
+    }
+  }
 }

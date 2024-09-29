@@ -57,4 +57,59 @@ export default class FakeIngredientClient {
 
     return { data: { data: ingredientInfo } };
   }
+
+  async getIngredientAutoComplete(search: string) {
+    const response = await axios.get(
+      `${this.baseUrl}public/data/ingredient-search.json`
+    );
+    return {
+      data: {
+        data: response.data.data
+          .filter((item: any) =>
+            item.name.toLowerCase().includes(search.toLowerCase())
+          )
+          .slice(0, 5),
+      },
+    };
+  }
+
+  async searchIngredients(params: {
+    category: string;
+    page: number;
+    perPage: number;
+    keyword: string | null;
+  }) {
+    const response = await axios.get(
+      `${this.baseUrl}public/data/ingredient-search.json`
+    );
+    let filteredData = response.data.data;
+
+    if (params.category !== 'all') {
+      filteredData = filteredData.filter(
+        (item: any) => item.category === params.category
+      );
+    }
+
+    if (params.keyword) {
+      const keyword = params.keyword.toLowerCase();
+      filteredData = filteredData.filter((item: any) =>
+        item.name.toLowerCase().includes(keyword)
+      );
+    }
+
+    const startIndex = (params.page - 1) * params.perPage;
+    const endIndex = startIndex + params.perPage;
+    const paginatedData = filteredData.slice(startIndex, endIndex);
+
+    return {
+      data: {
+        data: paginatedData,
+        pagination: {
+          total: filteredData.length,
+          page: params.page,
+          perPage: params.perPage,
+        },
+      },
+    };
+  }
 }
