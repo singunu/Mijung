@@ -1,8 +1,13 @@
+import axios from 'axios';
 import FakeIngredientClient from '../../../shared/api/fakeIngredientClient';
 import IngredientClient from '../../../shared/api/ingredientClient';
 import {
   PaginationInfo,
   Ingredient,
+} from '../../../shared/api/ingredientTypes';
+import {
+  IngredientSiseRequest,
+  IngredientSise,
 } from '../../../shared/api/ingredientTypes';
 
 // 재료 API를 추상화한 클래스
@@ -27,5 +32,31 @@ export default class IngredientApi {
       ingredients: res.data.data,
       pagination: res.data.pagination,
     };
+  }
+
+  // 메인페이지 재료 가격 추이 데이터 가져오는 메서드
+  async getIngredientSise(
+    params: IngredientSiseRequest
+  ): Promise<IngredientSise[]> {
+    try {
+      console.log('API 호출 파라미터:', params);
+      const response = await this.client.getIngredientSise(params);
+      console.log('API 응답:', response);
+      if (response instanceof Response && response.status === 204) {
+        console.log('데이터 없음 (204 상태 코드)');
+        return [];
+      }
+      return response.data.data;
+    } catch (error) {
+      console.error('API 호출 오류:', error);
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 400) {
+          throw new Error('잘못된 요청입니다.');
+        } else if (error.response?.status === 500) {
+          throw new Error('서버 오류가 발생했습니다.');
+        }
+      }
+      throw error;
+    }
   }
 }

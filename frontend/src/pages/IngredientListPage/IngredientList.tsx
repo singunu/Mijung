@@ -2,8 +2,8 @@ import { useState } from 'react';
 import SideLayout from '../../app/RoutingLayout/SideLayout';
 import MainLayout from '../../app/RoutingLayout/MainLayout';
 import Searchbar from '../../widgets/Searchbar/Searchbar';
-import { IngredientList } from '../../features/ingredientList/ui/IngredientList';
-import { useIngredients } from '../../features/ingredientList/api/useIngredients';
+import { IngredientList } from '@/features/ingredient/ui/IngredientList';
+import { useIngredients } from '@/features/ingredient/api/useIngredients';
 
 const categories = [
   { id: 'all', name: '전체' },

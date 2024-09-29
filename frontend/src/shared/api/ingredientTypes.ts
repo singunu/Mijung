@@ -21,3 +21,24 @@ export interface IngredientResponse {
   data: Ingredient[];
   pagination: PaginationInfo;
 }
+
+export interface IngredientSiseRequest {
+  period: 'year' | 'month' | 'week';
+  change: 'positive' | 'negative';
+  count: number;
+}
+
+export interface IngredientSise {
+  ingredientId: number;
+  name: string;
+  retailUnit: string;
+  retailUnitsize: string;
+  image: string;
+  price: string;
+  changeRate: number;
+  changePrice: number;
+}
+
+export interface IngredientSiseResponse {
+  data: IngredientSise[];
+}
