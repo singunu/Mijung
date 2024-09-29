@@ -34,4 +34,12 @@ export default class IngredientClient {
       { params }
     );
   }
+
+  async getIngredientInfo(
+    ingredientId: number
+  ): Promise<AxiosResponse<{ data: IngredientInfo }>> {
+    return axios.get<{ data: IngredientInfo }>(
+      `${this.baseURL}/ingredients/${ingredientId}/info`
+    );
+  }
 }

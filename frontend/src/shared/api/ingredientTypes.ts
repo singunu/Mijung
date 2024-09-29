@@ -42,3 +42,14 @@ export interface IngredientSise {
 export interface IngredientSiseResponse {
   data: IngredientSise[];
 }
+
+export interface IngredientInfo {
+  ingredientId: number;
+  name: string;
+  retailUnit: string;
+  retailUnitsize: string;
+  image: string;
+  price: string;
+  changeRate: number;
+  changePrice: number;
+}

@@ -1,5 +1,9 @@
 import axios from 'axios';
-import { IngredientResponse, IngredientSiseRequest } from './ingredientTypes';
+import {
+  IngredientResponse,
+  IngredientSiseRequest,
+  IngredientInfo,
+} from './ingredientTypes';
 
 // 개발 환경에서 사용할 가짜 API 클라이언트 클래스
 export default class FakeIngredientClient {
@@ -24,5 +28,33 @@ export default class FakeIngredientClient {
     const { period, change, count } = params;
     const filteredData = response.data[period][change].slice(0, count);
     return { data: { data: filteredData } };
+  }
+
+  async getIngredientInfo(ingredientId: number) {
+    const response = await axios.get<IngredientResponse>(
+      `${this.baseUrl}public/data/ingredient-search.json`
+    );
+
+    const ingredient = response.data.data.find(
+      (item) => item.ingredientId === ingredientId
+    );
+
+    if (!ingredient) {
+      throw new Error('Ingredient not found');
+    }
+
+    // IngredientInfo 형식에 맞게 데이터 변환
+    const ingredientInfo: IngredientInfo = {
+      ingredientId: ingredient.ingredientId,
+      name: ingredient.name,
+      retailUnit: ingredient.retailUnit,
+      retailUnitsize: ingredient.retailUnitsize,
+      image: ingredient.image,
+      price: ingredient.price,
+      changeRate: ingredient.changeRate,
+      changePrice: ingredient.changePrice,
+    };
+
+    return { data: { data: ingredientInfo } };
   }
 }

@@ -9,6 +9,7 @@ import {
   IngredientSiseRequest,
   IngredientSise,
 } from '../../../shared/api/ingredientTypes';
+import { IngredientInfo } from '../../../shared/api/ingredientTypes';
 
 // 재료 API를 추상화한 클래스
 export default class IngredientApi {
@@ -56,6 +57,16 @@ export default class IngredientApi {
           throw new Error('서버 오류가 발생했습니다.');
         }
       }
+      throw error;
+    }
+  }
+
+  async getIngredientInfo(ingredientId: number): Promise<IngredientInfo> {
+    try {
+      const response = await this.client.getIngredientInfo(ingredientId);
+      return response.data.data;
+    } catch (error) {
+      console.error('식재료 정보 조회 API 오류:', error);
       throw error;
     }
   }

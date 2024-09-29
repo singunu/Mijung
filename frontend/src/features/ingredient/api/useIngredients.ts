@@ -21,3 +21,10 @@ export const useIngredientSise = (params: IngredientSiseRequest) => {
     queryFn: () => ingredientApi.getIngredientSise(params),
   });
 };
+
+export const useIngredientInfo = (ingredientId: number) => {
+  return useQuery({
+    queryKey: ['ingredientInfo', ingredientId],
+    queryFn: () => ingredientApi.getIngredientInfo(ingredientId),
+  });
+};
