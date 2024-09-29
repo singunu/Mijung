@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
-import { Ingredient } from '../../shared/api/ingredientTypes';
+import { Ingredient, IngredientSise } from '../../shared/api/ingredientTypes';
 
 interface IngredientCardProps {
-  ingredient: Ingredient;
+  ingredient: Ingredient | IngredientSise;
   onAddToCart?: (id: number) => void;
 }
 

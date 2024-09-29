@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { IngredientResponse } from './ingredientTypes';
+import { IngredientResponse, IngredientSiseRequest } from './ingredientTypes';
 
 // 개발 환경에서 사용할 가짜 API 클라이언트 클래스
 export default class FakeIngredientClient {
@@ -15,5 +15,14 @@ export default class FakeIngredientClient {
       `${this.baseUrl}public/data/ingredient-search.json`,
       { params }
     );
+  }
+
+  async getIngredientSise(params: IngredientSiseRequest) {
+    const response = await axios.get<any>(
+      `${this.baseUrl}public/data/ingredient-sise.json`
+    );
+    const { period, change, count } = params;
+    const filteredData = response.data[period][change].slice(0, count);
+    return { data: { data: filteredData } };
   }
 }
