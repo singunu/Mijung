@@ -18,16 +18,30 @@ const categories = [
 const IngredientListPage = () => {
   const [category, setCategory] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
-  const { isLoading, error } = useIngredients(currentPage, 10, category);
+  const [keyword, setKeyword] = useState<string | null>(null);
+  const { data, isLoading, error } = useIngredients(
+    currentPage,
+    10,
+    category,
+    keyword
+  );
 
   const handleCategoryChange = (newCategory: string) => {
     setCategory(newCategory);
     setCurrentPage(1);
+    // 카테고리 변경 시 검색어 초기화
+    setKeyword(null);
   };
 
-  const handleSearch = (keyword: string) => {
-    // 검색 기능 구현
-    console.log(keyword); // build용 임시 코드
+  const handleSearch = (searchKeyword: string) => {
+    setKeyword(searchKeyword);
+    setCurrentPage(1);
+    // 검색 시 카테고리를 'all'로 설정
+    setCategory('all');
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
   };
 
   return (
@@ -44,10 +58,7 @@ const IngredientListPage = () => {
                 className={`px-4 py-2 rounded ${
                   category === cat.id ? 'bg-blue-500 text-white' : 'bg-gray-200'
                 }`}
-                onClick={() => {
-                  handleCategoryChange(cat.id);
-                  console.log('카테고리 id: ', cat.id);
-                }}
+                onClick={() => handleCategoryChange(cat.id)}
               >
                 {cat.name}
               </button>
@@ -58,7 +69,11 @@ const IngredientListPage = () => {
           ) : error ? (
             <p>오류가 발생했습니다.</p>
           ) : (
-            <IngredientList />
+            <IngredientList
+              ingredients={data?.ingredients || []}
+              pagination={data?.pagination}
+              onPageChange={handlePageChange}
+            />
           )}
         </div>
       </MainLayout>

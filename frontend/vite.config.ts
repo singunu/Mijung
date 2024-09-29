@@ -21,10 +21,20 @@ export default defineConfig({
         start_url: '/',
         icons: [
           {
-            src: 'logo.svg',
+            src: '/icons/logo.svg',
             sizes: '150x150',
             type: 'image/svg+xml',
             purpose: 'any maskable',
+          },
+          {
+            src: '/icons/android-chrome-192x192.png',
+            sizes: '192x192',
+            type: 'image/png',
+          },
+          {
+            src: '/icons/android-chrome-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
           },
         ],
       },

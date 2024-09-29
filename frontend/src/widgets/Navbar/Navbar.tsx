@@ -11,7 +11,10 @@ const Navbar = () => {
           <div className="flex space-x-7">
             <div>
               <Link to="/" className="flex items-center py-4 px-2">
-                <span className="font-semibold text-white text-lg">로고</span>
+                <img src="/icons/logo.svg" alt="로고" className="h-8 w-8" />
+                <span className="font-semibold text-white text-lg ml-2">
+                  임시로고에요
+                </span>
               </Link>
             </div>
           </div>
