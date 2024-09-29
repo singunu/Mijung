@@ -3,6 +3,7 @@ import {
   IngredientResponse,
   IngredientSiseRequest,
   IngredientSiseResponse,
+  IngredientInfo,
 } from './ingredientTypes';
 
 // 실제 API와 통신하는 클라이언트 클래스
