@@ -1,52 +1,25 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
 import SideLayout from '../../app/RoutingLayout/SideLayout';
 import MainLayout from '../../app/RoutingLayout/MainLayout';
 import Searchbar from '../../widgets/Searchbar/Searchbar';
 import IngredientCard from '../../widgets/IngredientCard/IngredientCard';
 import PriceGraphCard from '../../widgets/PriceGraphCard/PriceGraphCard';
 import NetworkGraphCard from '../../widgets/NetworkGraphCard/NetworkGraphCard';
-import { getIngredientInfo, IngredientInfo } from './IngredientDetailAPI';
+import { useIngredientInfo } from '../../features/ingredient/api/useIngredients';
 
 const IngredientDetailPage = () => {
   const { id } = useParams<{ id: string }>();
-  const [ingredient, setIngredient] = useState<IngredientInfo | null>(null);
   const navigate = useNavigate();
+  const { data: ingredient, isLoading, error } = useIngredientInfo(Number(id));
 
   const handleSearch = (keyword: string) => {
     // 검색 결과 페이지로 이동
     navigate(`/search/ingredients?keyword=${encodeURIComponent(keyword)}`);
   };
 
-  useEffect(() => {
-    const fetchIngredientInfo = async () => {
-      try {
-        if (id) {
-          const data = await getIngredientInfo(Number(id));
-          if (data) {
-            setIngredient(data);
-          } else {
-            console.error('식재료 정보가 없습니다.');
-          }
-        }
-      } catch (error) {
-        console.error('식재료 정보를 가져오는 데 실패했습니다:', error);
-      }
-    };
-
-    fetchIngredientInfo();
-  }, [id]);
-
-  // ingredient에 response가 들어왔을 때 체크용
-  useEffect(() => {
-    if (ingredient) {
-      console.log('ingredient is', ingredient);
-    }
-  }, [ingredient]);
-
-  if (!ingredient) {
-    return <div>로딩 중...</div>;
-  }
+  if (isLoading) return <div>로딩 중...</div>;
+  if (error) return <div>에러가 발생했습니다.</div>;
+  if (!ingredient) return <div>식재료 정보가 없습니다.</div>;
 
   return (
     <div className="grid grid-cols-10">
