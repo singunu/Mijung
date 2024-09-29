@@ -10,6 +10,7 @@ import com.example.mijung.recipe.dto.RecipeSearchResponse;
 import com.example.mijung.recipe.dto.RecipeViewResponse;
 import com.example.mijung.recipe.dto.StepDto;
 import com.example.mijung.recipe.entity.Recipe;
+import com.example.mijung.recipe.enums.RecipeMassage;
 import com.example.mijung.recipe.repository.RecipeRepository;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
@@ -20,7 +21,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -65,7 +68,8 @@ public class RecipeService {
     public RecipeViewResponse getRecipe(Integer recipeId) {
 
         Recipe recipe = recipeRepository.findById(recipeId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 레시피가 존재하지 않습니다."));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, RecipeMassage.RECIPE_NOT_FOUND.getMessage()));
 
 
         List<MaterialDto> materials = recipe.getMaterials().stream()
