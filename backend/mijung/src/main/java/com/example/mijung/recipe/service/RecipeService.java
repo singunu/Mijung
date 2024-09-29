@@ -64,22 +64,26 @@ public class RecipeService {
     @Transactional
     public RecipeViewResponse getRecipe(Integer recipeId) {
 
-        List<MaterialDto> matetials = new ArrayList<>();
-        for (int i = 1; i < 4; i++) {
-            matetials.add(MaterialDto.of(i, i));
-        }
+        Recipe recipe = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 레시피가 존재하지 않습니다."));
 
-        List<EtcDto> etc = new ArrayList<>();
-        for (int i = 1; i < 4; i++) {
-            etc.add(EtcDto.of(i));
-        }
 
-        List<StepDto> steps = new ArrayList<>();
-        for (int i = 1; i < 4; i++) {
-            steps.add(StepDto.of(i));
-        }
+        List<MaterialDto> materials = recipe.getMaterials().stream()
+                .map(MaterialDto::of)
+                .collect(Collectors.toList());
 
-        return RecipeViewResponse.of(recipeId, matetials, etc, steps);
+
+        List<EtcDto> etcs = recipe.getEtcs().stream()
+                .map(EtcDto::of)
+                .collect(Collectors.toList());
+
+
+        List<StepDto> steps = recipe.getSteps().stream()
+                .map(StepDto::of)
+                .collect(Collectors.toList());
+
+        return RecipeViewResponse.of(recipe, materials, etcs, steps);
+
     }
 
 

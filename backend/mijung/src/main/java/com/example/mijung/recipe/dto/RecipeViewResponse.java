@@ -1,6 +1,8 @@
 package com.example.mijung.recipe.dto;
 
 import java.util.List;
+
+import com.example.mijung.recipe.entity.Recipe;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -32,6 +34,21 @@ public class RecipeViewResponse {
                 .materials(material)
                 .etc(etc)
                 .steps(step)
+                .build();
+    }
+
+    public static RecipeViewResponse of(Recipe recipe, List<MaterialDto> materials, List<EtcDto> etcs, List<StepDto> steps) {
+        return RecipeViewResponse.builder()
+                .recipeId(recipe.getId())
+                .name(recipe.getName())
+                .kind(recipe.getKind().getDisplayName())
+                .image(recipe.getImage())
+                .inbun(recipe.getInbun().getDisplayName())
+                .level(recipe.getLevel().getDisplayName())
+                .time(recipe.getCookingTime().getDisplayName())
+                .materials(materials)
+                .etc(etcs)
+                .steps(steps)
                 .build();
     }
 }
