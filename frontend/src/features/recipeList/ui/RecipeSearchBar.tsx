@@ -1,14 +1,27 @@
 import { useState } from 'react';
 import { useSearchSuggestion } from '../api/useSearchSuggestion';
 import { Recipe } from '@/shared/api/recipeTypes';
+import { useNavigate } from 'react-router-dom';
+import { Error } from '@/shared/components';
 
 export const RecipeSearchBar = () => {
   const [keyword, setKeyword] = useState<string>('');
-  const { data: suggestions } = useSearchSuggestion(keyword);
+  const { data: suggestions, error } = useSearchSuggestion(keyword);
+  const navigate = useNavigate();
 
   const handleInputChange = (inputWord: string) => {
     setKeyword(inputWord);
   };
+
+  const handleSuggestionClick = (suggestion: Recipe) => {
+    navigate(`/recipes/${suggestion.recipeId}`);
+  };
+
+  if (error) {
+    console.log('ReacipeSearchBar Error');
+    return <Error />;
+  }
+  // if (isLoading) return <div>Loading...</div>;
 
   return (
     <div className="max-w-md mx-auto">
@@ -30,7 +43,7 @@ export const RecipeSearchBar = () => {
             <li
               key={index}
               className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-              onClick={() => setKeyword(suggestion.name)}
+              onClick={() => handleSuggestionClick(suggestion)}
             >
               {suggestion.name}
             </li>

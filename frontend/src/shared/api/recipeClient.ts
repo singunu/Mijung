@@ -1,11 +1,19 @@
-import axios from 'axios';
-import { RecipeListResponse, RecipeSearchResponse } from './recipeTypes';
+import axios, { AxiosInstance } from 'axios';
+import {
+  RecipeDetailResponse,
+  RecipeListResponse,
+  RecipeSearchResponse,
+} from './recipeTypes';
 
 export default class RecipeClient {
   private baseUrl: string;
+  private axiosInstance: AxiosInstance;
 
   constructor() {
     this.baseUrl = import.meta.env.VITE_APP_PRODUCT_URL;
+    this.axiosInstance = axios.create({
+      baseURL: this.baseUrl,
+    });
   }
 
   async getRecipes(params: {
@@ -13,14 +21,18 @@ export default class RecipeClient {
     perPage: number;
     keyword?: string;
   }) {
-    return axios.get<RecipeListResponse>(`${this.baseUrl}/recipe/search`, {
+    return this.axiosInstance.get<RecipeListResponse>('/recipe/search', {
       params,
     });
   }
 
   async getSearchSuggestions(keyword: string) {
-    return axios.get<RecipeSearchResponse>(
-      `${this.baseUrl}/recipe/search/${keyword}`
+    return this.axiosInstance.get<RecipeSearchResponse>(
+      `/recipe/search/${keyword}`
     );
+  }
+
+  async getRecipeDetail(recipeId: number) {
+    return this.axiosInstance.get<RecipeDetailResponse>(`/recipes/${recipeId}`);
   }
 }

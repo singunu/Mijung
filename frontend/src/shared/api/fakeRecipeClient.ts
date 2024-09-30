@@ -1,5 +1,9 @@
 import axios, { AxiosInstance } from 'axios';
-import { RecipeListResponse, RecipeSearchResponse } from './recipeTypes';
+import {
+  RecipeDetailResponse,
+  RecipeListResponse,
+  RecipeSearchResponse,
+} from './recipeTypes';
 
 export default class FakeRecipeClient {
   private baseUrl: string;
@@ -24,6 +28,12 @@ export default class FakeRecipeClient {
   async getSearchSuggestions() {
     return this.axiosInstance.get<RecipeSearchResponse>(
       'public/data/recipe-search.json'
+    );
+  }
+
+  async getRecipeDetail(recipeId: number) {
+    return this.axiosInstance.get<RecipeDetailResponse>(
+      `public/data/recipe-detail-${recipeId}.json`
     );
   }
 }
