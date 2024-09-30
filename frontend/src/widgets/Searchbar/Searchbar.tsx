@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useIngredientAutoComplete } from '../../features/ingredient/api/useIngredients';
 
@@ -13,9 +13,10 @@ const Searchbar = ({ type, onSearch }: SearchbarProps) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const { data: ingredientSuggestions, isLoading: isIngredientLoading } =
-    useIngredientAutoComplete(type === 'ingredients' ? keyword : '');
-  // const { data: recipeSuggestions, isLoading: isRecipeLoading } =
+  const { data: ingredientSuggestions } = useIngredientAutoComplete(
+    type === 'ingredients' ? keyword : ''
+  );
+  // const { data: recipeSuggestions } =
   //   useRecipeAutoComplete(type === 'recipes' ? keyword : '');
 
   const suggestions =
@@ -67,20 +68,29 @@ const Searchbar = ({ type, onSearch }: SearchbarProps) => {
       {isDropdownOpen && suggestions && suggestions.length > 0 && (
         <ul className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg">
           {type === 'ingredients'
-            ? suggestions.map((item) => (
-                <li
-                  key={item.ingredientId}
-                  className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                  onClick={() => handleItemClick(item)}
-                >
-                  {item.name}
-                </li>
-              ))
-            : suggestions.map((item) => (
+            ? suggestions.map(
+                (item: { ingredientId: number; name: string }) => (
+                  <li
+                    key={item.ingredientId}
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    onClick={() =>
+                      handleItemClick({
+                        id: item.ingredientId,
+                        name: item.name,
+                      })
+                    }
+                  >
+                    {item.name}
+                  </li>
+                )
+              )
+            : suggestions.map((item: { recipeId: number; name: string }) => (
                 <li
                   key={item.recipeId} // 레시피의 경우 다른 ID를 사용
                   className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                  onClick={() => handleItemClick(item)}
+                  onClick={() =>
+                    handleItemClick({ id: item.recipeId, name: item.name })
+                  }
                 >
                   {item.name}
                 </li>
