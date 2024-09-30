@@ -40,7 +40,14 @@ export default defineConfig({
       },
     }),
   ],
-
+  server: {
+    host: true, // dev에서 외부접근 허용. 퍼블릭 IP에서 접속 가능하도록 설정
+    port: 5173,
+  },
+  preview: {
+    host: true, // preview에서 외부접근 허용. 퍼블릭 IP에서 접속 가능하도록 설정
+    port: 4173,
+  },
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),
