@@ -1,11 +1,10 @@
 ## csv 파일 삽입하는법
 
 1. terminal을 활용해 mysql 로그인
+
 2. db schema 컬럼 위치 조절(csv 순서와 sql 컬럼 순서를 맞춰놔야 됨)
    (recipe_id,name,hit,scrap_count,kind,inbun,level,cooking_time,image)
-
 - 컬럼 위치를 조절하는 이유는 삽입되는 ,으로 짜르고 삽입되는 순서로 들어가기 때문임.
-
 3. 다음 명령어 삽입,
 
 ```mysql
@@ -70,45 +69,58 @@ mysql --local-infile -u mijung -p
 
 ```text
 http://www.kamis.or.kr/service/price/xml.do?action=periodEcoPriceList&p_productclscode=01&p_regday=2024-09-24&p_itemcategorycode=100&p_itemcode=141&p_convert_kg_yn=Y&p_cert_key=111&p_cert_id=222&p_returntype=xml
-
 ```
 
 ### 9월 26일 상황
+
 * cow와 vegetable을 활용해 재료 테이블을 만들고 있습니다. 내일 오전까지 다 임포트 하겠습니다.
 
 ### 9월 27일 오전 상황
+
 * 카미스 정보와 ingredient 정보를 동기화 시켜줬다.
+
 * 이 때, ingredient에 카미스 정보를 매핑할 때 2가지 조건을 지켰다.
+
 * * 첨가되거나, 완성품인 경우에는 카미스 매핑에서 제거했다.
+
 * * 말리거나, 삶거나 등 조리 방법에 차이만 있을 경우네는 카미스에서 매핑해줬다.
+
 * 위 처리가 끝나면 태우님께서 주신 자료와 카미스 자료를 조인해서 ingredient에서 가격을 볼 수 있도록 했다.
+
 * * 이 떄 left outer join을 했다. 이 후 null인 데이터는 기타로 빼기 위해서 700번 코드를 부여했다.
 
 * **material**은 map을 활용해 태우님꼐서 주신 자료를 대표값으로 매핑하고, 레시피 데이터에서 하나씩 변환해갔다.
 
 ## insertingredient.sql 넣는 방법
+
 - 식재료 테이블(ingredient table)에 데이터 넣는 코드
-```mysql
-mysql -umijung -pmijungmijungmijung --default-character-set=utf8mb4 -hlocalhost mijung < {파일경로}\insertingredient.sql
-```
+  
+  ```mysql
+  mysql -umijung -pmijungmijungmijung --default-character-set=utf8mb4 -hlocalhost mijung < {파일경로}\insertingredient.sql
+  ```
 
 ## material.csv mysql에 넣는 방법
+
 * 컬럼 순서 바꾸는 명령어
-```mysql
-ALTER TABLE `mijung`.`material` 
-CHANGE COLUMN `name` `name` TEXT NOT NULL AFTER `material_id`,
-CHANGE COLUMN `analyzed` `analyzed` BIT(1) NOT NULL AFTER `type`,
-CHANGE COLUMN `recipe_id` `recipe_id` INT NOT NULL AFTER `analyzed`,
-CHANGE COLUMN `ingredient_id` `ingredient_id` INT NULL DEFAULT NULL AFTER `recipe_id`;
-```
+  
+  ```mysql
+  ALTER TABLE `mijung`.`material` 
+  CHANGE COLUMN `name` `name` TEXT NOT NULL AFTER `material_id`,
+  CHANGE COLUMN `analyzed` `analyzed` BIT(1) NOT NULL AFTER `type`,
+  CHANGE COLUMN `recipe_id` `recipe_id` INT NOT NULL AFTER `analyzed`,
+  CHANGE COLUMN `ingredient_id` `ingredient_id` INT NULL DEFAULT NULL AFTER `recipe_id`;
+  ```
 
 * mysql에 넣기(python이 빠르고 편합니다)
+
 * * mysql.connector가 필요합니다. (!pip3 install mysql-connector-python)
-```python
-import pandas as pd
-import mysql.connector
-from mysql.connector import Error
-import numpy as np
+    
+    ```python
+    import pandas as pd
+    import mysql.connector
+    from mysql.connector import Error
+    import numpy as np
+    ```
 
 path = {폴더경로}
 
@@ -123,12 +135,14 @@ tempdf['analyzed']= tempdf['analyzed'].fillna('')
 tempdf['analyzed']=tempdf['analyzed'].astype(bool)
 tempdf
 
-
 # MySQL 연결 매개변수
+
 try:
     cnx = mysql.connector.connect(user='{db user 이름}', password='{패스워드}', host='localhost', database='mijung')
     cursor = cnx.cursor()
+
 # DataFrame의 행을 반복하여 MySQL에 데이터 삽입
+
     for index, row in tempdf.iterrows():
         try:
             cursor.execute(
@@ -137,7 +151,7 @@ try:
             )
         except Error as e:
             print(f"Error inserting row {index}: {e}")
-
+    
     # 변경 사항 커밋
     cnx.commit()
 
@@ -152,8 +166,14 @@ finally:
 
 ```
 
-
 ### step 삽입하는법
+
 * step.py 돌리세요
 * * 구글드라이브에서 mergedf를 다운받아주세요.
 * * db 사용자 이름, db 비밀번호, 그리고 경로값만 수정해주세요!
+
+### ingredient_info 삽입하는법
+
+```
+
+```
