@@ -3,6 +3,7 @@ import { useSearchSuggestion } from '../api/useSearchSuggestion';
 import { Recipe } from '@/shared/api/recipeTypes';
 import { useNavigate } from 'react-router-dom';
 import { Error } from '@/shared/components';
+import { find } from 'underscore';
 
 export const RecipeSearchBar = () => {
   const [keyword, setKeyword] = useState<string>('');
@@ -17,15 +18,30 @@ export const RecipeSearchBar = () => {
     navigate(`/recipes/${suggestion.recipeId}`);
   };
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (suggestions === undefined) return;
+
+    const correctKeyword = find(
+      suggestions,
+      (recipe) => recipe.name === keyword
+    );
+
+    if (!correctKeyword) {
+      alert('정확한 레시피 이름을 입력해주세요.');
+    } else if (correctKeyword) {
+      navigate(`/recipes/${correctKeyword}`);
+    }
+  };
+
   if (error) {
     console.log('ReacipeSearchBar Error');
     return <Error />;
   }
-  // if (isLoading) return <div>Loading...</div>;
 
   return (
-    <div className="max-w-md mx-auto">
-      <div className="flex items-center">
+    <div className="relative max-w-40 min-w-96 mx-auto">
+      <form className="flex items-center" onSubmit={(e) => handleSubmit(e)}>
         <input
           type="text"
           placeholder="Search..."
@@ -36,9 +52,9 @@ export const RecipeSearchBar = () => {
         <button className="px-4 py-2 bg-blue-500 text-white rounded-r-lg">
           Search
         </button>
-      </div>
+      </form>
       {suggestions && suggestions.length > 0 && (
-        <ul className="mt-2 bg-white border rounded-lg shadow-lg">
+        <ul className="absolute w-full mt-2 bg-white border rounded-lg shadow-lg">
           {suggestions.map((suggestion: Recipe, index: number) => (
             <li
               key={index}
