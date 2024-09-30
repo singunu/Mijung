@@ -172,8 +172,8 @@ finally:
 * * db 사용자 이름, db 비밀번호, 그리고 경로값만 수정해주세요!
 ```
 
-### ### ingredient_info 삽입하는법
+### ingredient_info 삽입하는법
 
-```
-
-```
+- ingredient_info.py 돌리세요
+- - 구글드라이브에서 sorted_and_cleaned_real_data를 다운받아주세요.
+- - db 사용자 이름, db 비밀번호, 그리고 경로값만 수정해주세요!
