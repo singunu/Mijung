@@ -17,7 +17,11 @@ export default class FakeRecipeClient {
     });
   }
 
-  async getRecipes(params: { page: number; perPage: number }) {
+  async getRecipes(params: {
+    page: number;
+    perPage: number;
+    keyword?: string;
+  }) {
     return this.axiosInstance.get<RecipeListResponse>(
       'public/data/recipe-search.json',
       {
