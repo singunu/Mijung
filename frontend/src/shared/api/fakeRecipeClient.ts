@@ -1,3 +1,4 @@
+import { sample } from 'underscore';
 import axios, { AxiosInstance } from 'axios';
 import {
   RecipeDetailResponse,
@@ -32,8 +33,9 @@ export default class FakeRecipeClient {
   }
 
   async getRecipeDetail(recipeId: number) {
+    const newRecipeId = sample([1, 2, 3, 4, 5, recipeId]);
     return this.axiosInstance.get<RecipeDetailResponse>(
-      `public/data/recipe-detail-${recipeId}.json`
+      `public/data/recipe-detail-${newRecipeId}.json`
     );
   }
 }
