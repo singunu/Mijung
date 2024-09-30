@@ -28,7 +28,7 @@ export interface RecipeDetail {
   inbun: string;
   level: string;
   time: string;
-  material: RecipeDetailMaterial[];
+  materials: RecipeDetailMaterial[];
   etc: RecipeDetailEtc[];
   steps: RecipeDetailStep[];
 }
