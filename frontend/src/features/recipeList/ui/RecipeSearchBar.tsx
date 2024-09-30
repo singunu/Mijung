@@ -24,7 +24,7 @@ export const RecipeSearchBar = () => {
   // if (isLoading) return <div>Loading...</div>;
 
   return (
-    <div className="max-w-md mx-auto">
+    <div className="relative max-w-40 min-w-96 mx-auto">
       <div className="flex items-center">
         <input
           type="text"
@@ -38,7 +38,7 @@ export const RecipeSearchBar = () => {
         </button>
       </div>
       {suggestions && suggestions.length > 0 && (
-        <ul className="mt-2 bg-white border rounded-lg shadow-lg">
+        <ul className="absolute w-full mt-2 bg-white border rounded-lg shadow-lg">
           {suggestions.map((suggestion: Recipe, index: number) => (
             <li
               key={index}
