@@ -99,8 +99,13 @@ export const RecipeSearchBar = ({
           Search
         </button>
       </form>
-      {showSuggestions && suggestions && suggestions.length > 0 && (
-        <ul className="absolute w-full mt-2 bg-white border rounded-lg shadow-lg">
+      {suggestions && suggestions.length > 0 && (
+        <ul
+          className={`absolute w-full mt-2 bg-white border rounded-lg shadow-lg ${
+            showSuggestions ? 'opacity-100 visible' : 'opacity-0 invisible'
+          }`}
+          aria-hidden={!showSuggestions}
+        >
           {suggestions.map((suggestion: Recipe, index: number) => (
             <li
               key={index}
