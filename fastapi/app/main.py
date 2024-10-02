@@ -9,6 +9,7 @@ from app.models.models import initialize_models
 import logging
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import JSONResponse
+from app.common.config import settings
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -44,7 +45,7 @@ async def global_exception_handler(request: Request, exc: Exception):
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins={"*"},
+    allow_origins=[settings.CORS_ORIGIN],
     allow_credentials=True,
     allow_methods={"OPTIONS", "GET", "POST"},
     allow_headers={"*"},

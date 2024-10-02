@@ -135,5 +135,20 @@ public class IngredientController {
 
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.from(result));
     }
+    /*
+    * 메인 페이지 - 식재료 시세 조회
+    *
+    * @Param period(year, month, week), change(positive, negative), count
+    * @Return 식재료 정보와 가격, 변동률 정보를 포함하는 ResponseEntity 객체를 반환합니다.
+    * */
 
+    @GetMapping("/price")
+    @Operation(
+        summary ="메인 페이지 - 재료 가격 현황", description = "식재료 정보와 가격, 변동률 정보를 포함하는 ResponseEntity 객체를 반환합니다, "
+    )
+    @ApiResponse(responseCode = "200", description = "성공")
+    public ResponseEntity<ResponseDTO<?>> getIngredientPrice(@Valid @ModelAttribute IngredientSiseRequest ingredientSiseRequest) {
+        List<IngredientInfoViewResponse> result = ingredientService.getIngredientPrice(ingredientSiseRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.from(result));
+    }
 }

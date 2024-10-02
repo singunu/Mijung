@@ -17,8 +17,11 @@ import com.example.mijung.ingredient.repository.IngredientRepository;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
@@ -127,6 +130,18 @@ public class IngredientService {
         return data;
     }
 
+    public List<IngredientInfoViewResponse> getIngredientPrice(IngredientSiseRequest ingredientSiseRequest) {
+        if(!isValidIngredientRequest(ingredientSiseRequest)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, INGREDIENT_NOT_FOUND.getMessage());
+        }
+
+        String period = ingredientSiseRequest.getPeriod();
+        String change = ingredientSiseRequest.getChange();
+
+
+        return null;
+    }
+
 
     public Ingredient getIngredient(Integer ingredientId) {
         return ingredientRepository.findById(ingredientId)
@@ -141,5 +156,19 @@ public class IngredientService {
     private String resolveKeyword(String keyword) {
         // 키워드가 null이면 빈 문자열로 처리하여 모든 이름 조회
         return keyword == null ? "" : keyword;
+    }
+
+    public boolean isValidIngredientRequest(IngredientSiseRequest ingredientSiseRequest) {
+        if(ingredientSiseRequest == null){
+            return false;
+        }
+        if (ingredientSiseRequest.getPeriod() == null || ingredientSiseRequest.getChange() == null) {
+            return false;
+        }
+        // Period 및 Change의 유효성 검사
+        boolean isValidPeriod = Set.of("year", "week", "month").contains(ingredientSiseRequest.getPeriod());
+        boolean isValidChange = Set.of("positive", "negative").contains(ingredientSiseRequest.getChange());
+
+        return isValidPeriod && isValidChange;
     }
 }

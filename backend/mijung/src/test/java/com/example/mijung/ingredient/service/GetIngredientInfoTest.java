@@ -1,13 +1,16 @@
 package com.example.mijung.ingredient.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 
 import com.example.mijung.ingredient.dto.IngredientInfoViewResponse;
+import com.example.mijung.ingredient.dto.IngredientSiseRequest;
 import com.example.mijung.ingredient.entity.Ingredient;
 import com.example.mijung.ingredient.entity.IngredientInfo;
 import com.example.mijung.ingredient.entity.IngredientRate;
@@ -120,5 +123,74 @@ public class GetIngredientInfoTest {
 
         // When & Then
         assertThrows(ResponseStatusException.class, () -> ingredientService.getIngredientInfo(nonExistentId));
+    }
+
+    @Test
+    @DisplayName("메인 정보 조회 테스트 period or change가 null인 경우 : 실패")
+    void getIngredientPricePeriodOrPeriodisNull(){
+        IngredientSiseRequest ingredientSiseRequest = new IngredientSiseRequest();
+        ingredientSiseRequest.setPeriod(null);
+        ingredientSiseRequest.setCount(3);
+        ingredientSiseRequest.setChange("positive");
+
+        assertFalse(ingredientService.isValidIngredientRequest(ingredientSiseRequest));
+
+        ingredientSiseRequest.setPeriod("year");
+        ingredientSiseRequest.setCount(3);
+        ingredientSiseRequest.setChange(null);
+
+        assertFalse(ingredientService.isValidIngredientRequest(ingredientSiseRequest));
+
+    }
+    @Test
+    @DisplayName("메인 정보 조회 테스트 : Enum에 들어가지 않는 경우 실패: period가 year, month, week가 아닌 경우")
+    void getIngredientPricePeriodDoesntMatch(){
+        IngredientSiseRequest ingredientSiseRequest = new IngredientSiseRequest();
+        ingredientSiseRequest.setPeriod("yea");
+        ingredientSiseRequest.setCount(3);
+        ingredientSiseRequest.setChange("positive");
+
+        assertFalse(ingredientService.isValidIngredientRequest(ingredientSiseRequest));
+
+        ingredientSiseRequest.setPeriod("monthh");
+        ingredientSiseRequest.setCount(3);
+        ingredientSiseRequest.setChange("positive");
+
+        assertFalse(ingredientService.isValidIngredientRequest(ingredientSiseRequest));
+
+        ingredientSiseRequest.setPeriod(" week ");
+        ingredientSiseRequest.setCount(3);
+        ingredientSiseRequest.setChange("positive");
+
+        assertFalse(ingredientService.isValidIngredientRequest(ingredientSiseRequest));
+
+        ingredientSiseRequest.setPeriod("week");
+        ingredientSiseRequest.setCount(3);
+        ingredientSiseRequest.setChange("positive");
+
+        assertTrue(ingredientService.isValidIngredientRequest(ingredientSiseRequest));
+    }
+
+    @Test
+    @DisplayName("메인 정보 조회 테스트 : Enum에 들어가지 않는 경우 실패: period가 year, month, week가 아닌 경우")
+    void getIngredientPriceChangeDoesntMatch(){
+        IngredientSiseRequest ingredientSiseRequest = new IngredientSiseRequest();
+        ingredientSiseRequest.setPeriod("year");
+        ingredientSiseRequest.setCount(3);
+        ingredientSiseRequest.setChange("nagative");
+
+        assertFalse(ingredientService.isValidIngredientRequest(ingredientSiseRequest));
+
+        ingredientSiseRequest.setPeriod("month");
+        ingredientSiseRequest.setCount(3);
+        ingredientSiseRequest.setChange(" positive");
+
+        assertFalse(ingredientService.isValidIngredientRequest(ingredientSiseRequest));
+
+        ingredientSiseRequest.setPeriod("week");
+        ingredientSiseRequest.setCount(3);
+        ingredientSiseRequest.setChange("positive");
+
+        assertTrue(ingredientService.isValidIngredientRequest(ingredientSiseRequest));
     }
 }
