@@ -14,7 +14,7 @@ public class RecommendIngredientListResponse {
     @Schema(description = "식재료명", example = "감자")
     private final String name;
 
-    public static RecommendIngredientListResponse of(Ingredient ingredient) {
+    public static RecommendIngredientListResponse from(Ingredient ingredient) {
         return RecommendIngredientListResponse.builder()
                 .ingredientId(ingredient.getId())
                 .name(ingredient.getItemName())
