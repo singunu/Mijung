@@ -12,6 +12,7 @@ import com.example.mijung.ingredient.dto.IngredientSearchResponse;
 import com.example.mijung.ingredient.dto.IngredientSiseRequest;
 import com.example.mijung.ingredient.entity.Ingredient;
 import com.example.mijung.ingredient.entity.IngredientInfo;
+import com.example.mijung.ingredient.entity.IngredientPredict;
 import com.example.mijung.ingredient.entity.IngredientRate;
 import com.example.mijung.ingredient.enums.IngredientMassage;
 import com.example.mijung.ingredient.repository.IngredientRepository;
@@ -20,11 +21,7 @@ import com.example.mijung.recipe.entity.Recipe;
 import com.example.mijung.recipe.repository.RecipeRepository;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -119,20 +116,37 @@ public class IngredientService {
 
     @Transactional
     public List<IngredientPriceGraphViewResponse> getIngredientPriceGraph(Integer ingredientId) {
+        Ingredient ingredient = getIngredient(ingredientId);
 
-        List<IngredientPriceGraphViewResponse> data = new ArrayList<>();
+        LocalDate today = LocalDate.now();
+        LocalDate oneYearAgo = today.minusYears(1);
+        LocalDate oneWeekLater = today.plusWeeks(1);
 
-        Random random = new Random();
-        LocalDate now = LocalDate.now();
-        for (LocalDate date = now.minusYears(1); date.isBefore(now.plusDays(1)); date = date.plusDays(1)) {
-            data.add(IngredientPriceGraphViewResponse.of(date, Math.abs(random.nextInt()), Math.abs(random.nextInt())));
-        }
+        List<IngredientInfo> infoList = ingredientRepository.findInfoByDateRange(ingredientId, oneYearAgo, today);
+        List<IngredientPredict> predictList = ingredientRepository.findPredictByDateRange(ingredientId, oneYearAgo, oneWeekLater);
 
-        for (LocalDate date = now.plusDays(1); date.isBefore(now.plusDays(4)); date = date.plusDays(1)) {
-            data.add(IngredientPriceGraphViewResponse.of(date, 0, Math.abs(random.nextInt())));
-        }
 
-        return data;
+        Map<LocalDate, Integer> predictPriceMap = predictList.stream()
+                .collect(Collectors.toMap(IngredientPredict::getDate, IngredientPredict::getPredictedPrice));
+
+        List<IngredientPriceGraphViewResponse> result = infoList.stream()
+                .map(info -> IngredientPriceGraphViewResponse.of(
+                        info.getDate(),
+                        info.getPrice(),
+                        predictPriceMap.getOrDefault(info.getDate(), null)
+                ))
+                .collect(Collectors.toList());
+
+
+        predictList.stream()
+                .filter(predict -> predict.getDate().isAfter(today))
+                .forEach(predict -> result.add(IngredientPriceGraphViewResponse.of(
+                        predict.getDate(),
+                        null, // 미래 날짜의 실제 가격은 null
+                        predict.getPredictedPrice()
+                )));
+
+        return result;
     }
 
     @Transactional
