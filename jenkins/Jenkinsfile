@@ -171,6 +171,7 @@ pipeline {
                                 sh """
                                     ssh ubuntu@${AWS_IP} '
                                         cd ./S11P21D107
+                                        sleep 13
                                         rm -f .env
                                     '
                                 """
