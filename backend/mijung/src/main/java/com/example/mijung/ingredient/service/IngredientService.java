@@ -116,11 +116,7 @@ public class IngredientService {
 
     @Transactional
     public List<IngredientPriceGraphViewResponse> getIngredientPriceGraph(Integer ingredientId) {
-
-        Optional<Ingredient> ingredientOptional = ingredientRepository.findById(ingredientId);
-        if (ingredientOptional.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, INGREDIENT_NOT_FOUND.getMessage());
-        }
+        Ingredient ingredient = getIngredient(ingredientId);
 
         LocalDate today = LocalDate.now();
         LocalDate oneYearAgo = today.minusYears(1);
