@@ -21,16 +21,33 @@ export default defineConfig({
         start_url: '/',
         icons: [
           {
-            src: 'logo.svg',
+            src: '/icons/logo.svg',
             sizes: '150x150',
             type: 'image/svg+xml',
             purpose: 'any maskable',
+          },
+          {
+            src: '/icons/android-chrome-192x192.png',
+            sizes: '192x192',
+            type: 'image/png',
+          },
+          {
+            src: '/icons/android-chrome-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
           },
         ],
       },
     }),
   ],
-
+  server: {
+    host: true, // dev에서 외부접근 허용. 퍼블릭 IP에서 접속 가능하도록 설정
+    port: 5173,
+  },
+  preview: {
+    host: true, // preview에서 외부접근 허용. 퍼블릭 IP에서 접속 가능하도록 설정
+    port: 4173,
+  },
   resolve: {
     alias: {
       '@': resolve(__dirname, './src'),

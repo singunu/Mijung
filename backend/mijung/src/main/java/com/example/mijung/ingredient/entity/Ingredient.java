@@ -1,24 +1,17 @@
 package com.example.mijung.ingredient.entity;
 
 import com.example.mijung.material.entity.Material;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Ingredient {
     @Id
@@ -43,11 +36,14 @@ public class Ingredient {
     @Column(name = "kind_name", nullable = false, length = 20)
     private String kindName;
 
-    @Column(name = "retail_unit", nullable = false, length = 10)
+    @Column(name = "retail_unit", length = 10)
     private String retailUnit;
 
-    @Column(name = "retail_unitsize", nullable = false, length = 10)
+    @Column(name = "retail_unitsize", length = 10)
     private String retailUnitsize;
+
+    @Column(name = "product_rank_code", nullable = false, length = 3)
+    private String productRankCode;
 
     @Column
     private String image;
@@ -56,13 +52,16 @@ public class Ingredient {
     private Boolean isPriced;
 
     @OneToMany(mappedBy = "ingredient")
-    private List<Material> material;
+    private List<Material> materials = new ArrayList<>();
 
     @OneToMany(mappedBy = "ingredient", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<IngredientInfo> ingredientInfos = new ArrayList<>();
 
     @OneToMany(mappedBy = "ingredient", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<IngredientRate> ingredientRates = new ArrayList<>();
+
+    @OneToMany(mappedBy = "ingredient", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<IngredientPredict> ingredientPredicts = new ArrayList<>();
 
     public IngredientInfo getLatestIngredientInfo() {
         return ingredientInfos.stream()
@@ -74,5 +73,20 @@ public class Ingredient {
         return ingredientRates.stream()
                 .max((rate1, rate2) -> rate1.getDate().compareTo(rate2.getDate()))
                 .orElse(null);
+    }
+
+    @Builder
+    public Ingredient(Integer id, String itemCategoryCode, String itemCategoryName, String itemCode, String itemName,
+                      String kindCode, String kindName, String retailUnit, String retailUnitsize, boolean isPriced) {
+        this.id = id;
+        this.itemCategoryCode = itemCategoryCode;
+        this.itemCategoryName = itemCategoryName;
+        this.itemCode = itemCode;
+        this.itemName = itemName;
+        this.kindCode = kindCode;
+        this.kindName = kindName;
+        this.retailUnit = retailUnit;
+        this.retailUnitsize = retailUnitsize;
+        this.isPriced = isPriced;
     }
 }

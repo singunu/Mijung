@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/recipe")
+@RequestMapping("/api/v1/recipes")
 public class RecipeController {
     private final RecipeService recipeService;
 
@@ -39,7 +39,9 @@ public class RecipeController {
 
         ResponseDTO<List<RecipeListResponse>> result = recipeService.getRecipeList(dto);
 
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        HttpStatus status = result.getData().isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
+
+        return ResponseEntity.status(status).body(result);
     }
 
     /**
@@ -56,7 +58,9 @@ public class RecipeController {
 
         List<RecipeSearchResponse> result = recipeService.getRecipeSearch(search);
 
-        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.from(result));
+        HttpStatus status = result.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
+
+        return ResponseEntity.status(status).body(ResponseDTO.from(result));
     }
 
     /**

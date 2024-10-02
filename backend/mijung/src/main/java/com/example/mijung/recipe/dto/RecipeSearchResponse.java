@@ -12,7 +12,7 @@ public class RecipeSearchResponse {
     public static RecipeSearchResponse of(Integer recipeId, String name) {
         return RecipeSearchResponse.builder()
                 .recipeId(recipeId)
-                .name(name + recipeId)
+                .name(name)
                 .build();
     }
 }

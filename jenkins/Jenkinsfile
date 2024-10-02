@@ -9,7 +9,6 @@ pipeline {
     environment {
         FRONTEND_DIR = './frontend'
         BACKEND_DIR = './backend/mijung'
-        // FRONTEND_IMG = 'mijung_frontend'
         BACKEND_IMG = 'mijung_backend'
         PROJECT_DIR = './S11P21D107'
         TEST_PROJECT_DIR = '/home/ubuntu/jenkins-project'
@@ -26,10 +25,15 @@ pipeline {
             steps {
                 echo 'Checkout processing...'
                 checkout scm
-                // git branch: 'main', \
-                //     credentialsId: 'jenkins-test-gitlab', \
-                //     url: 'https://gitlab.com/vaaast-lake/jenkins-project.git'
                 echo 'Checkout done'
+            }
+        }
+        stage('Prepare Environment') {
+            steps {
+                // Config File Provider 플러그인을 사용하여 .env 파일 가져오기
+                configFileProvider([configFile(fileId: 'react-production-env', variable: 'FE_ENV_FILE')]) {
+                    sh "cp ${FE_ENV_FILE} ${FRONTEND_DIR}/.env.production"
+                }
             }
         }
         stage('Builds') {
@@ -79,16 +83,7 @@ pipeline {
                         sh "docker push $DOCKER_USERNAME/${BACKEND_IMG}:latest"
                         echo 'Building BE docker image complete.'
                     }
-                    // fe build 결과는 nginx로 배포하기에 이미지 빌드 불필요
-                    // dir("${FRONTEND_DIR}") {
-                    //     echo 'Building FE docker image...'
-                    //     sh "docker build -t $DOCKER_USERNAME/${FRONTEND_IMG}:${env.BUILD_ID} ."
-                    //     sh "docker tag $DOCKER_USERNAME/${FRONTEND_IMG}:${env.BUILD_ID} \
-                    //         $DOCKER_USERNAME/${FRONTEND_IMG}:latest"
-                    //     sh "docker push $DOCKER_USERNAME/${FRONTEND_IMG}:${env.BUILD_ID}"
-                    //     sh "docker push $DOCKER_USERNAME/${FRONTEND_IMG}:latest"
-                    //     echo 'Building FE docker image complete.'
-                    // }
+                    // fe build 결과는 nginx로 배포하기에 도커 이미지 빌드 불필요
                 }
             }
         }
@@ -118,34 +113,68 @@ pipeline {
             }
         }
         stage('Deploy to EC2') {
-            steps {
-                echo 'Deploying....'
-                withCredentials([
-                    usernamePassword(
-                        credentialsId: 'gitlab-credential', 
-                        usernameVariable: 'GITLAB_USERNAME', 
-                        passwordVariable: 'GITLAB_PASSWORD')
-                ]) {
-                    sshagent(['ssh-agent']) {
-                        script {
-                            sh """
-                                ssh ubuntu@${AWS_IP} '
-                                    echo current branch name is ${env.BRANCH_NAME}
+            stages {
+                stage('Initializing server') {
+                    steps {
+                        echo 'Initializing....'
+                        withCredentials([
+                            usernamePassword(
+                                credentialsId: 'gitlab-credential', 
+                                usernameVariable: 'GITLAB_USERNAME', 
+                                passwordVariable: 'GITLAB_PASSWORD')
+                        ]) {
+                            sshagent(['ssh-agent']) {
+                                script {
+                                    configFileProvider([configFile(fileId: 'docker-compose-env', variable: 'DOCKER_ENV_FILE')]) {
+                                        sh "scp ${DOCKER_ENV_FILE} ubuntu@${AWS_IP}:~/S11P21D107/.env"
+                                    }
 
-                                    cd ./S11P21D107
-                                    git pull https://${GITLAB_USERNAME}:${GITLAB_PASSWORD}@lab.ssafy.com/s11-bigdata-dist-sub1/S11P21D107.git ${env.BRANCH_NAME}
+                                    sh """
+                                        ssh ubuntu@${AWS_IP} '
+                                            echo current branch name is ${env.BRANCH_NAME}
 
-                                    docker compose stop backend
-                                    docker compose rm -f backend
-                                    docker rmi vaaastlake/mijung_backend
-                                    docker compose up -d --no-deps --build backend
+                                            cd ./S11P21D107
+                                            git switch ${env.BRANCH_NAME}
+                                            git pull https://${GITLAB_USERNAME}:${GITLAB_PASSWORD}@lab.ssafy.com/s11-bigdata-dist-sub1/S11P21D107.git ${env.BRANCH_NAME}
 
-                                    docker compose restart webserver
-                                '
-                            """
-                            // sh "git pull origin ${}"
-                            // sh "ssh ubuntu@${AWS_IP} 'docker compose '"
-                        } 
+                                            docker compose stop backend
+                                            docker compose rm -f backend
+                                            docker rmi vaaastlake/${BACKEND_IMG}
+                                        '
+                                    """
+                                } 
+                            }
+                        }
+                    }
+                }
+                stage('Restarting apps') {
+                    steps {
+                        echo 'Restarting...'
+                        sshagent(['ssh-agent']) {
+                            script {
+                                sh """
+                                    ssh ubuntu@${AWS_IP} '
+                                        cd ./S11P21D107
+                                        docker compose up -d --no-deps backend
+                                        docker compose restart webserver
+                                    '
+                                """
+                            }
+                        }
+                    }
+                }
+                stage('Cleaning Server') {
+                    steps {
+                        echo 'Cleaning...'
+                        sshagent(['ssh-agent']) {
+                            script {
+                                sh """
+                                    ssh ubuntu@${AWS_IP} '
+                                        cd ./S11P21D107
+                                    '
+                                """
+                            }
+                        }
                     }
                 }
             }
@@ -166,7 +195,6 @@ pipeline {
                     )
                 }
             }
-            sh 'docker logout'
             cleanWs()
         }
         failure {
@@ -183,10 +211,14 @@ pipeline {
                     )
                 }
             }
-            sh 'docker logout'
             cleanWs()
         }
         always {
+            sh """
+                pwd
+                docker logout
+                rm -f ${FRONTEND_DIR}/.env.production       
+            """
             echo 'everything is done'
         }
     }
