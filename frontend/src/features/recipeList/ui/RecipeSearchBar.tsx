@@ -2,15 +2,19 @@ import { useSearchSuggestion } from '../api/useSearchSuggestion';
 import { Recipe } from '@/shared/api/recipeTypes';
 import { useNavigate } from 'react-router-dom';
 import { Error } from '@/shared/components';
-import { find } from 'underscore';
+// import { find } from 'underscore';
 
 interface Props {
   keyword: string;
   onKeywordChange: (keyword: string) => void;
-  onKeywordSubmit: (keyword: string) => void;
+  onSubmit: (keyword: string) => void;
 }
 
-export const RecipeSearchBar = ({ keyword, onKeywordChange }: Props) => {
+export const RecipeSearchBar = ({
+  keyword,
+  onKeywordChange,
+  onSubmit,
+}: Props) => {
   const { data: suggestions, error } = useSearchSuggestion(keyword);
   const navigate = useNavigate();
 
@@ -22,14 +26,12 @@ export const RecipeSearchBar = ({ keyword, onKeywordChange }: Props) => {
     e.preventDefault();
     if (suggestions === undefined) return;
 
-    const correctKeyword = find(
-      suggestions,
-      (recipe) => recipe.name === keyword
-    );
+    // const correctKeyword = find(
+    //   suggestions,
+    //   (recipe) => recipe.name === keyword
+    // );
 
-    if (!correctKeyword) {
-      alert('정확한 레시피 이름을 입력해주세요.');
-    }
+    onSubmit(keyword);
   };
 
   if (error) {
