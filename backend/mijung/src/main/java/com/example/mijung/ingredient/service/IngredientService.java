@@ -116,12 +116,22 @@ public class IngredientService {
 
     @Transactional
     public List<IngredientPriceGraphViewResponse> getIngredientPriceGraph(Integer ingredientId) {
+
+        Optional<Ingredient> ingredientOptional = ingredientRepository.findById(ingredientId);
+        if (ingredientOptional.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, INGREDIENT_NOT_FOUND.getMessage());
+        }
+
         LocalDate today = LocalDate.now();
         LocalDate oneYearAgo = today.minusYears(1);
         LocalDate oneWeekLater = today.plusWeeks(1);
 
-        List<IngredientInfo> infoList = ingredientRepository.findInfoByDateRange(ingredientId, oneYearAgo, oneWeekLater);
+        List<IngredientInfo> infoList = ingredientRepository.findInfoByDateRange(ingredientId, oneYearAgo, today);
         List<IngredientPredict> predictList = ingredientRepository.findPredictByDateRange(ingredientId, oneYearAgo, oneWeekLater);
+
+        if (infoList.isEmpty() && predictList.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT, IngredientMassage.NO_PRICE_DATA.getMessage());
+        }
 
         Map<LocalDate, Integer> predictPriceMap = predictList.stream()
                 .collect(Collectors.toMap(IngredientPredict::getDate, IngredientPredict::getPredictedPrice));
