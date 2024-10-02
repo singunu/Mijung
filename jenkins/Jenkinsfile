@@ -133,7 +133,7 @@ pipeline {
 
                                     cd ./S11P21D107
                                     git switch ${env.BRANCH_NAME}
-                                    git pull https://${GITLAB_USERNAME}:${GITLAB_PASSWORD}@lab.ssafy.com/s11-bigdata-dist-sub1/S11P21D107.git origin/${env.BRANCH_NAME}
+                                    git pull https://${GITLAB_USERNAME}:${GITLAB_PASSWORD}@lab.ssafy.com/s11-bigdata-dist-sub1/S11P21D107.git ${env.BRANCH_NAME}
 
                                     docker compose stop backend
                                     docker compose rm -f backend
