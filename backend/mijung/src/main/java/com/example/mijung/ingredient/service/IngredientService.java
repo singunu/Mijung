@@ -129,9 +129,6 @@ public class IngredientService {
         List<IngredientInfo> infoList = ingredientRepository.findInfoByDateRange(ingredientId, oneYearAgo, today);
         List<IngredientPredict> predictList = ingredientRepository.findPredictByDateRange(ingredientId, oneYearAgo, oneWeekLater);
 
-        if (infoList.isEmpty() && predictList.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NO_CONTENT, IngredientMassage.NO_PRICE_DATA.getMessage());
-        }
 
         Map<LocalDate, Integer> predictPriceMap = predictList.stream()
                 .collect(Collectors.toMap(IngredientPredict::getDate, IngredientPredict::getPredictedPrice));
