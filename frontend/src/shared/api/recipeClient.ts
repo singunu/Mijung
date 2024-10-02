@@ -21,14 +21,14 @@ export default class RecipeClient {
     perPage: number;
     keyword?: string;
   }) {
-    return this.axiosInstance.get<RecipeListResponse>('/recipe/search', {
+    return this.axiosInstance.get<RecipeListResponse>('/recipes/search', {
       params,
     });
   }
 
   async getSearchSuggestions(keyword: string) {
     return this.axiosInstance.get<RecipeSearchResponse>(
-      `/recipe/search/${keyword}`
+      `/recipes/search/${keyword}`
     );
   }
 
