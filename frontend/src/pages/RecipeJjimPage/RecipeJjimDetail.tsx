@@ -1,10 +1,11 @@
-import SideLayout from '../../app/RoutingLayout/SideLayout';
+import LeftSideLayout from '../../app/RoutingLayout/LeftSideLayout';
 import MainLayout from '../../app/RoutingLayout/MainLayout';
+import RightSideLayout from '../../app/RoutingLayout/RightSideLayout';
 
 const RecipeJjimDetail = () => {
   return (
     <div className="grid grid-cols-10">
-      <SideLayout />
+      <LeftSideLayout />
       <MainLayout>
         <div className="container mx-auto px-4 py-8">
           <h1 className="text-3xl font-bold mb-6">레시피 찜 상세 페이지</h1>
@@ -13,7 +14,7 @@ const RecipeJjimDetail = () => {
           </p>
         </div>
       </MainLayout>
-      <SideLayout />
+      <RightSideLayout />
     </div>
   );
 };

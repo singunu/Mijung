@@ -13,7 +13,7 @@ const Navbar = () => {
               <Link to="/" className="flex items-center py-4 px-2">
                 <img src="/icons/logo.svg" alt="로고" className="h-8 w-8" />
                 <span className="font-semibold text-white text-lg ml-2">
-                  임시로고에요
+                  미정(味定)
                 </span>
               </Link>
             </div>

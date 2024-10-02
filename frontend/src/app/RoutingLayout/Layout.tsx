@@ -5,9 +5,11 @@ import Navbar from '../../widgets/Navbar/Navbar';
 // Outlet에 페이지들이 렌더링
 const Layout = () => {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col min-h-screen">
       <Navbar />
-      <Outlet />
+      <div className="flex-1">
+        <Outlet />
+      </div>
     </div>
   );
 };

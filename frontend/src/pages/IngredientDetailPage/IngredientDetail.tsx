@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import SideLayout from '../../app/RoutingLayout/SideLayout';
+import LeftSideLayout from '../../app/RoutingLayout/LeftSideLayout';
 import MainLayout from '../../app/RoutingLayout/MainLayout';
+import RightSideLayout from '../../app/RoutingLayout/RightSideLayout';
 import Searchbar from '../../widgets/Searchbar/Searchbar';
 import IngredientCard from '../../widgets/IngredientCard/IngredientCard';
 import PriceGraphCard from '../../widgets/PriceGraphCard/PriceGraphCard';
@@ -23,7 +24,7 @@ const IngredientDetailPage = () => {
 
   return (
     <div className="grid grid-cols-10">
-      <SideLayout />
+      <LeftSideLayout />
       <MainLayout>
         <Searchbar type="ingredients" onSearch={handleSearch} />
         <div className="container mx-auto px-4 py-8">
@@ -38,13 +39,13 @@ const IngredientDetailPage = () => {
               <PriceGraphCard
                 graphId={ingredient.ingredientId ?? 0}
                 title={`${ingredient.name ?? '알 수 없음'} 가격 추이`}
-                width={600}
+                width={500}
                 height={200}
               />
               <NetworkGraphCard
                 graphId={ingredient.ingredientId ?? 0}
                 title={`${ingredient.name ?? '알 수 없음'} 관련 네트워크`}
-                width={600}
+                width={500}
                 height={200}
               />
             </div>
@@ -55,7 +56,7 @@ const IngredientDetailPage = () => {
           </div>
         </div>
       </MainLayout>
-      <SideLayout />
+      <RightSideLayout />
     </div>
   );
 };
