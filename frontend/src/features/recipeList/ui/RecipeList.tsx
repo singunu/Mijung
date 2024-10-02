@@ -12,6 +12,11 @@ export const RecipeList = ({ keyword }: Props) => {
   const [page, setPage] = useState<number>(1);
   const { data, isFetching, error } = useRecipeList({ page, keyword });
 
+  // keyword 변경 시 페이지 1로 초기화
+  useEffect(() => {
+    setPage(1);
+  }, [keyword]);
+
   useEffect(() => {
     if (data?.pagination) {
       const lastPage = Math.ceil(
@@ -27,16 +32,14 @@ export const RecipeList = ({ keyword }: Props) => {
     }
   }, [data, page, keyword]);
 
-  if (!data) {
-    console.log('No data on RecipeList');
-    return <Error />;
-  }
-
   if (error) return <Error />;
+  if (!data) {
+    return <div>Loading...</div>;
+  }
 
   const { recipes, pagination } = data;
 
-  const hnadleNextPage = () => {
+  const handleNextPage = () => {
     const lastPage = Math.ceil(pagination.total / pagination.perPage);
     setPage((prePage) => (prePage % lastPage) + 1);
   };
@@ -60,7 +63,7 @@ export const RecipeList = ({ keyword }: Props) => {
         </span>
       </div>
       {isFetching ? <span>Loading...</span> : null}
-      <button onClick={hnadleNextPage}>Next Page</button>
+      <button onClick={handleNextPage}>Next Page</button>
     </>
   );
 };
