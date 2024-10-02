@@ -114,9 +114,9 @@ pipeline {
         }
         stage('Deploy to EC2') {
             stages {
-                stage('Deploying') {
+                stage('Initializing server') {
                     steps {
-                        echo 'Deploying....'
+                        echo 'Initializing....'
                         withCredentials([
                             usernamePassword(
                                 credentialsId: 'gitlab-credential', 
@@ -140,7 +140,6 @@ pipeline {
                                             docker compose stop backend
                                             docker compose rm -f backend
                                             docker rmi vaaastlake/${BACKEND_IMG}
-                                            
                                         '
                                     """
                                 } 
@@ -158,7 +157,6 @@ pipeline {
                                         cd ./S11P21D107
                                         docker compose up -d --no-deps backend
                                         docker compose restart webserver
-                                        rm -f .env
                                     '
                                 """
                             }
