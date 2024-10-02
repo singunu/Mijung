@@ -6,8 +6,14 @@ import { useState } from 'react';
 
 export const RecipeListPage = () => {
   const [keyword, setKeyword] = useState<string>('');
+  const [submittedKeyword, setSubmittedKeyword] = useState<string>('');
+
   const handleKeywordChange = (inputWord: string) => {
     setKeyword(inputWord);
+  };
+
+  const handleSubmit = (submittedWord: string) => {
+    setSubmittedKeyword(submittedWord);
   };
 
   return (
@@ -17,8 +23,9 @@ export const RecipeListPage = () => {
         <RecipeSearchBar
           keyword={keyword}
           onKeywordChange={handleKeywordChange}
+          onSubmit={handleSubmit}
         />
-        <RecipeList keyword={keyword} />
+        <RecipeList keyword={submittedKeyword} />
       </MainLayout>
       <SideLayout />
     </div>

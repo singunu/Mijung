@@ -9,12 +9,16 @@ interface Props {
 }
 
 export const RecipeList = ({ keyword }: Props) => {
-  const [page, setPage] = useState<number>(0);
+  const [page, setPage] = useState<number>(1);
   const { data, isFetching, error } = useRecipeList({ page, keyword });
 
   useEffect(() => {
     if (data?.pagination) {
-      const nextPage = (page + 1) % data.pagination.perPage;
+      const lastPage = Math.ceil(
+        data.pagination.total / data.pagination.perPage
+      );
+      const nextPage = (page % lastPage) + 1;
+
       queryClient.prefetchQuery({
         queryKey: ['recipe-list', nextPage, data.pagination.perPage, keyword],
         queryFn: () =>
@@ -32,28 +36,31 @@ export const RecipeList = ({ keyword }: Props) => {
 
   const { recipes, pagination } = data;
 
+  const hnadleNextPage = () => {
+    const lastPage = Math.ceil(pagination.total / pagination.perPage);
+    setPage((prePage) => (prePage % lastPage) + 1);
+  };
+
   return (
     <>
-      <ul>
-        {recipes.map((recipe) => (
-          <li key={recipe.recipeId}>
-            {recipe.name} - {recipe.kind}
-          </li>
-        ))}
-      </ul>
+      {recipes.length === 0 ? (
+        <div>데이터가 없습니다.</div>
+      ) : (
+        <ul>
+          {recipes.map((recipe) => (
+            <li key={recipe.recipeId}>
+              {recipe.name} - {recipe.kind}
+            </li>
+          ))}
+        </ul>
+      )}
       <div>
         <span>
           총 {pagination.total} 중 {pagination.page} 페이지
         </span>
       </div>
       {isFetching ? <span>Loading...</span> : null}
-      <button
-        onClick={() => {
-          setPage((prevPage) => (prevPage + 1) % pagination.perPage);
-        }}
-      >
-        Next Page
-      </button>
+      <button onClick={hnadleNextPage}>Next Page</button>
     </>
   );
 };
