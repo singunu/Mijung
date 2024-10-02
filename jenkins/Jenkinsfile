@@ -132,6 +132,7 @@ pipeline {
                                     echo current branch name is ${env.BRANCH_NAME}
 
                                     cd ./S11P21D107
+                                    git switch ${env.BRANCH_NAME}
                                     git pull https://${GITLAB_USERNAME}:${GITLAB_PASSWORD}@lab.ssafy.com/s11-bigdata-dist-sub1/S11P21D107.git ${env.BRANCH_NAME}
 
                                     docker compose stop backend
