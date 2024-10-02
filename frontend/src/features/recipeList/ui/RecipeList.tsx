@@ -3,6 +3,7 @@ import { useRecipeList } from '../api/useRecipeList';
 import { useEffect, useState } from 'react';
 import { Error } from '@/shared/components';
 import { recipeApi } from '@/entities/recipe/model/recipeApi';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   keyword: string;
@@ -11,6 +12,7 @@ interface Props {
 export const RecipeList = ({ keyword }: Props) => {
   const [page, setPage] = useState<number>(1);
   const { data, isFetching, error } = useRecipeList({ page, keyword });
+  const navigate = useNavigate();
 
   // keyword 변경 시 페이지 1로 초기화
   useEffect(() => {
@@ -43,6 +45,10 @@ export const RecipeList = ({ keyword }: Props) => {
     }
   };
 
+  const handleRecipeClick = (recipeId: number) => {
+    navigate(`/recipes/${recipeId}`);
+  };
+
   return (
     <>
       {data?.recipes.length === 0 ? (
@@ -50,7 +56,11 @@ export const RecipeList = ({ keyword }: Props) => {
       ) : (
         <ul>
           {data?.recipes.map((recipe) => (
-            <li key={recipe.recipeId}>
+            <li
+              key={recipe.recipeId}
+              onClick={() => handleRecipeClick(recipe.recipeId)}
+              className="cursor-pointer p-2 rounded-md transition-colors duration-200 ease-in-out hover:bg-blue-100"
+            >
               {recipe.name} - {recipe.kind}
             </li>
           ))}
