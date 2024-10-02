@@ -7,7 +7,7 @@ import {
 } from './ingredientTypes';
 
 // 실제 API와 통신하는 클라이언트 클래스
-const API_BASE_URL = import.meta.env.VITE_APP_PRODUCT_URL;
+const baseURL = import.meta.env.VITE_APP_PRODUCT_URL;
 
 export default class IngredientClient {
   private baseURL: string;
@@ -30,10 +30,9 @@ export default class IngredientClient {
   async getIngredientSise(
     params: IngredientSiseRequest
   ): Promise<AxiosResponse<IngredientSiseResponse>> {
-    return axios.get<IngredientSiseResponse>(
-      `${API_BASE_URL}/ingredients/price`,
-      { params }
-    );
+    return axios.get<IngredientSiseResponse>(`${baseURL}/ingredients/price`, {
+      params,
+    });
   }
 
   async getIngredientInfo(

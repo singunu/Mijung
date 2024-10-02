@@ -58,7 +58,8 @@ const IngredientCard = ({
                   `(${ingredient.retailUnitsize}${ingredient.retailUnit})`
                 ) : (
                   <span className="text-gray-500 text-xs">
-                    (단위 정보 없음 - UX 관점에서 아예 생략하는 것 고려)
+                    {/* (Dev:단위 정보 없음) */}
+                    {/* UX 관점에서는, 단위없으면 아예 생략 고려 */}
                   </span>
                 )}
               </>
