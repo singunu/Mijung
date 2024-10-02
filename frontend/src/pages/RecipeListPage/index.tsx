@@ -1,6 +1,6 @@
-import LeftSideLayout from '../../app/RoutingLayout/LeftSideLayout';
-import MainLayout from '../../app/RoutingLayout/MainLayout';
-import RightSideLayout from '../../app/RoutingLayout/RightSideLayout';
+import LeftSideLayout from '@/app/RoutingLayout/LeftSideLayout';
+import MainLayout from '@/app/RoutingLayout/MainLayout';
+import RightSideLayout from '@/app/RoutingLayout/RightSideLayout';
 import { RecipeList } from '@/features/recipeList/ui/RecipeList';
 import { RecipeSearchBar } from '@/features/recipeList/ui/RecipeSearchBar';
 import { useState } from 'react';
