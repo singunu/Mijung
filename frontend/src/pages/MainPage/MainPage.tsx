@@ -1,5 +1,6 @@
-import SideLayout from '../../app/RoutingLayout/SideLayout';
+import LeftSideLayout from '../../app/RoutingLayout/LeftSideLayout';
 import MainLayout from '../../app/RoutingLayout/MainLayout';
+import RightSideLayout from '../../app/RoutingLayout/RightSideLayout';
 import { IngredientSiseList } from '@/features/ingredient/ui/IngredientSiseList';
 import { useIngredientSise } from '@/features/ingredient/api/useIngredients';
 
@@ -26,7 +27,7 @@ const MainPage = () => {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-10">
-      <SideLayout />
+      <LeftSideLayout />
       <MainLayout>
         <div className="container mx-auto px-4 py-8">
           <h1 className="text-3xl font-bold mb-6">메인 페이지</h1>
@@ -44,7 +45,7 @@ const MainPage = () => {
           />
         </div>
       </MainLayout>
-      <SideLayout />
+      <RightSideLayout />
     </div>
   );
 };

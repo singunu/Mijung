@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import SideLayout from '../../app/RoutingLayout/SideLayout';
+import LeftSideLayout from '../../app/RoutingLayout/LeftSideLayout';
 import MainLayout from '../../app/RoutingLayout/MainLayout';
+import RightSideLayout from '../../app/RoutingLayout/RightSideLayout';
 import Searchbar from '../../widgets/Searchbar/Searchbar';
 import { IngredientList } from '@/features/ingredient/ui/IngredientList';
 import { useIngredients } from '@/features/ingredient/api/useIngredients';
@@ -46,7 +47,7 @@ const IngredientListPage = () => {
 
   return (
     <div className="grid grid-cols-10">
-      <SideLayout />
+      <LeftSideLayout />
       <MainLayout>
         <Searchbar type="ingredients" onSearch={handleSearch} />
         <div className="container mx-auto px-4 py-8">
@@ -77,7 +78,7 @@ const IngredientListPage = () => {
           )}
         </div>
       </MainLayout>
-      <SideLayout />
+      <RightSideLayout />
     </div>
   );
 };

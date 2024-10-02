@@ -1,5 +1,6 @@
-import SideLayout from '../../app/RoutingLayout/SideLayout';
+import LeftSideLayout from '../../app/RoutingLayout/LeftSideLayout';
 import MainLayout from '../../app/RoutingLayout/MainLayout';
+import RightSideLayout from '../../app/RoutingLayout/RightSideLayout';
 import { useParams } from 'react-router-dom';
 import { useRecipeDetail } from '@/features/recipeList/api/useRecipeDetail';
 import { Error } from '@/shared/components';
@@ -18,7 +19,7 @@ export const RecipeDetailPage = () => {
 
   return (
     <div className="grid grid-cols-10">
-      <SideLayout />
+      <LeftSideLayout />
       <MainLayout>
         <div className="container mx-auto px-4 py-8">
           <h1 className="text-3xl font-bold mb-6">{recipe.name}</h1>
@@ -44,7 +45,7 @@ export const RecipeDetailPage = () => {
           </div>
         </div>
       </MainLayout>
-      <SideLayout />
+      <RightSideLayout />
     </div>
   );
 };

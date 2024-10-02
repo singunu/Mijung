@@ -1,5 +1,6 @@
-import SideLayout from '@/app/RoutingLayout/SideLayout';
-import MainLayout from '@/app/RoutingLayout/MainLayout';
+import LeftSideLayout from '../../app/RoutingLayout/LeftSideLayout';
+import MainLayout from '../../app/RoutingLayout/MainLayout';
+import RightSideLayout from '../../app/RoutingLayout/RightSideLayout';
 import { RecipeList } from '@/features/recipeList/ui/RecipeList';
 import { RecipeSearchBar } from '@/features/recipeList/ui/RecipeSearchBar';
 import { useState } from 'react';
@@ -18,7 +19,7 @@ export const RecipeListPage = () => {
 
   return (
     <div className="grid grid-cols-10">
-      <SideLayout />
+      <LeftSideLayout />
       <MainLayout>
         <RecipeSearchBar
           keyword={keyword}
@@ -27,7 +28,7 @@ export const RecipeListPage = () => {
         />
         <RecipeList keyword={submittedKeyword} />
       </MainLayout>
-      <SideLayout />
+      <RightSideLayout />
     </div>
   );
 };
