@@ -33,24 +33,23 @@ export const RecipeList = ({ keyword }: Props) => {
   }, [data, page, keyword]);
 
   if (error) return <Error />;
-  if (!data) {
-    return <div>Loading...</div>;
-  }
-
-  const { recipes, pagination } = data;
 
   const handleNextPage = () => {
-    const lastPage = Math.ceil(pagination.total / pagination.perPage);
-    setPage((prePage) => (prePage % lastPage) + 1);
+    if (data?.pagination) {
+      const lastPage = Math.ceil(
+        data.pagination.total / data.pagination.perPage
+      );
+      setPage((prePage) => (prePage % lastPage) + 1);
+    }
   };
 
   return (
     <>
-      {recipes.length === 0 ? (
+      {data?.recipes.length === 0 ? (
         <div>데이터가 없습니다.</div>
       ) : (
         <ul>
-          {recipes.map((recipe) => (
+          {data?.recipes.map((recipe) => (
             <li key={recipe.recipeId}>
               {recipe.name} - {recipe.kind}
             </li>
@@ -59,7 +58,7 @@ export const RecipeList = ({ keyword }: Props) => {
       )}
       <div>
         <span>
-          총 {pagination.total} 중 {pagination.page} 페이지
+          총 {data?.pagination.total} 중 {data?.pagination.page} 페이지
         </span>
       </div>
       {isFetching ? <span>Loading...</span> : null}
