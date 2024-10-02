@@ -12,12 +12,13 @@ export default class RecipeApi {
 
   async getRecipes(
     page: number = 1,
-    perPage: number = 10
+    perPage: number = 10,
+    keyword?: string
   ): Promise<{
     recipes: Recipe[];
     pagination: PaginationInfo;
   }> {
-    const res = await this.client.getRecipes({ page, perPage });
+    const res = await this.client.getRecipes({ page, perPage, keyword });
     return {
       recipes: res.data.data,
       pagination: res.data.pagination,

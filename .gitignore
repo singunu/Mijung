@@ -421,4 +421,7 @@ spark-warehouse/
 .history
 .ionide
 
+### nginx certbot
+certbot/*
+
 # End of https://www.toptal.com/developers/gitignore/api/node,react,visualstudiocode,intellij,java,spark,apachehadoop

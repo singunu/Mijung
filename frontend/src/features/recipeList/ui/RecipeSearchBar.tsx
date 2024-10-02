@@ -1,18 +1,18 @@
-import { useState } from 'react';
 import { useSearchSuggestion } from '../api/useSearchSuggestion';
 import { Recipe } from '@/shared/api/recipeTypes';
 import { useNavigate } from 'react-router-dom';
 import { Error } from '@/shared/components';
 import { find } from 'underscore';
 
-export const RecipeSearchBar = () => {
-  const [keyword, setKeyword] = useState<string>('');
+interface Props {
+  keyword: string;
+  onKeywordChange: (keyword: string) => void;
+  onKeywordSubmit: (keyword: string) => void;
+}
+
+export const RecipeSearchBar = ({ keyword, onKeywordChange }: Props) => {
   const { data: suggestions, error } = useSearchSuggestion(keyword);
   const navigate = useNavigate();
-
-  const handleInputChange = (inputWord: string) => {
-    setKeyword(inputWord);
-  };
 
   const handleSuggestionClick = (suggestion: Recipe) => {
     navigate(`/recipes/${suggestion.recipeId}`);
@@ -29,8 +29,6 @@ export const RecipeSearchBar = () => {
 
     if (!correctKeyword) {
       alert('정확한 레시피 이름을 입력해주세요.');
-    } else if (correctKeyword) {
-      navigate(`/recipes/${correctKeyword}`);
     }
   };
 
@@ -46,7 +44,7 @@ export const RecipeSearchBar = () => {
           type="text"
           placeholder="Search..."
           value={keyword}
-          onChange={(e) => handleInputChange(e.target.value)}
+          onChange={(e) => onKeywordChange(e.target.value)}
           className="w-full px-4 py-2 text-gray-700 bg-white border rounded-l-lg focus:outline-none focus:border-blue-500"
         />
         <button className="px-4 py-2 bg-blue-500 text-white rounded-r-lg">

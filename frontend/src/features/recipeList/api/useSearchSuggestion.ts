@@ -4,9 +4,9 @@ import {
   UseQueryResult,
 } from '@tanstack/react-query';
 import { recipeApi } from '@/entities/recipe/model/recipeApi';
+import { Recipe } from '@/shared/api/recipeTypes';
 import { isArray } from 'underscore';
 import { queryClient } from '@/shared/query/query-client';
-import { Recipe } from '@/shared/api/recipeTypes';
 
 export const useSearchSuggestion = (
   keyword: string
