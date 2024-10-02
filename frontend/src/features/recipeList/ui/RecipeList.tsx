@@ -9,12 +9,16 @@ interface Props {
 }
 
 export const RecipeList = ({ keyword }: Props) => {
-  const [page, setPage] = useState<number>(0);
+  const [page, setPage] = useState<number>(1);
   const { data, isFetching, error } = useRecipeList({ page, keyword });
 
   useEffect(() => {
     if (data?.pagination) {
-      const nextPage = (page + 1) % data.pagination.perPage;
+      const lastPage = Math.ceil(
+        data.pagination.total / data.pagination.perPage
+      );
+      const nextPage = (page % lastPage) + 1;
+
       queryClient.prefetchQuery({
         queryKey: ['recipe-list', nextPage, data.pagination.perPage, keyword],
         queryFn: () =>
@@ -32,6 +36,11 @@ export const RecipeList = ({ keyword }: Props) => {
 
   const { recipes, pagination } = data;
 
+  const hnadleNextPage = () => {
+    const lastPage = Math.ceil(pagination.total / pagination.perPage);
+    setPage((prePage) => (prePage % lastPage) + 1);
+  };
+
   return (
     <>
       <ul>
@@ -47,13 +56,7 @@ export const RecipeList = ({ keyword }: Props) => {
         </span>
       </div>
       {isFetching ? <span>Loading...</span> : null}
-      <button
-        onClick={() => {
-          setPage((prevPage) => (prevPage + 1) % pagination.perPage);
-        }}
-      >
-        Next Page
-      </button>
+      <button onClick={hnadleNextPage}>Next Page</button>
     </>
   );
 };
