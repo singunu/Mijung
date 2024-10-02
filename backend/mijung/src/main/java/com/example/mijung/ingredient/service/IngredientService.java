@@ -21,11 +21,7 @@ import com.example.mijung.recipe.entity.Recipe;
 import com.example.mijung.recipe.repository.RecipeRepository;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -120,33 +116,32 @@ public class IngredientService {
 
     @Transactional
     public List<IngredientPriceGraphViewResponse> getIngredientPriceGraph(Integer ingredientId) {
-
         LocalDate today = LocalDate.now();
         LocalDate oneYearAgo = today.minusYears(1);
         LocalDate oneWeekLater = today.plusWeeks(1);
 
-        List<IngredientInfo> pastInfoList = ingredientRepository.findInfoByDateRange(ingredientId, oneYearAgo, today);
-        List<IngredientPredict> futurePredictList = ingredientRepository.findPredictByDateRange(ingredientId, today, oneWeekLater);
+        List<IngredientInfo> infoList = ingredientRepository.findInfoByDateRange(ingredientId, oneYearAgo, oneWeekLater);
+        List<IngredientPredict> predictList = ingredientRepository.findPredictByDateRange(ingredientId, oneYearAgo, oneWeekLater);
 
-        List<IngredientPriceGraphViewResponse> pastData = pastInfoList.stream()
+        Map<LocalDate, Integer> predictPriceMap = predictList.stream()
+                .collect(Collectors.toMap(IngredientPredict::getDate, IngredientPredict::getPredictedPrice));
+
+        List<IngredientPriceGraphViewResponse> result = infoList.stream()
                 .map(info -> IngredientPriceGraphViewResponse.of(
                         info.getDate(),
                         info.getPrice(),
-                        null // 과거 데이터에는 예상 가격이 없으므로 null 처리
+                        predictPriceMap.getOrDefault(info.getDate(), null)
                 ))
                 .collect(Collectors.toList());
 
-        List<IngredientPriceGraphViewResponse> futureData = futurePredictList.stream()
-                .map(predict -> IngredientPriceGraphViewResponse.of(
+
+        predictList.stream()
+                .filter(predict -> predict.getDate().isAfter(today))
+                .forEach(predict -> result.add(IngredientPriceGraphViewResponse.of(
                         predict.getDate(),
-                        null, // 미래 데이터에는 실제 가격이 없으므로 null 처리
+                        null, // 미래 날짜의 실제 가격은 null
                         predict.getPredictedPrice()
-                ))
-                .collect(Collectors.toList());
-
-        List<IngredientPriceGraphViewResponse> result = new ArrayList<>();
-        result.addAll(pastData);
-        result.addAll(futureData);
+                )));
 
         return result;
     }

@@ -60,8 +60,8 @@ public class Ingredient {
     @OneToMany(mappedBy = "ingredient", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<IngredientRate> ingredientRates = new ArrayList<>();
 
-    @OneToMany(mappedBy = "ingredient", fetch = FetchType.LAZY)
-    private List<IngredientPredict> ingredientPredicts;
+    @OneToMany(mappedBy = "ingredient", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<IngredientPredict> ingredientPredicts = new ArrayList<>();
 
     public IngredientInfo getLatestIngredientInfo() {
         return ingredientInfos.stream()
