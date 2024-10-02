@@ -43,13 +43,17 @@ export const RecipeList = ({ keyword }: Props) => {
 
   return (
     <>
-      <ul>
-        {recipes.map((recipe) => (
-          <li key={recipe.recipeId}>
-            {recipe.name} - {recipe.kind}
-          </li>
-        ))}
-      </ul>
+      {recipes.length === 0 ? (
+        <div>데이터가 없습니다.</div>
+      ) : (
+        <ul>
+          {recipes.map((recipe) => (
+            <li key={recipe.recipeId}>
+              {recipe.name} - {recipe.kind}
+            </li>
+          ))}
+        </ul>
+      )}
       <div>
         <span>
           총 {pagination.total} 중 {pagination.page} 페이지
