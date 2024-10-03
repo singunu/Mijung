@@ -14,11 +14,24 @@ import com.example.mijung.ingredient.entity.Ingredient;
 import com.example.mijung.ingredient.entity.IngredientInfo;
 import com.example.mijung.ingredient.entity.IngredientRate;
 import com.example.mijung.ingredient.repository.IngredientRepository;
+<<<<<<< Updated upstream
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.ArrayList;
+=======
+import com.example.mijung.ingredient.repository.IngredientRepositoryCustom;
+import com.example.mijung.recipe.entity.Recipe;
+import com.example.mijung.recipe.repository.RecipeRepository;
+import jakarta.transaction.Transactional;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+>>>>>>> Stashed changes
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
@@ -34,6 +47,11 @@ import org.springframework.web.server.ResponseStatusException;
 public class IngredientService {
 
     private final IngredientRepository ingredientRepository;
+<<<<<<< Updated upstream
+=======
+    private final RecipeRepository recipeRepository;
+    private final IngredientRepositoryCustom ingredientRepositoryCustom;
+>>>>>>> Stashed changes
 
     @Transactional
     public ResponseDTO<List<IngredientInfoViewResponse>> getIngredientList(PaginationAndFilteringDto dto) {
@@ -62,14 +80,27 @@ public class IngredientService {
     }
 
     @Transactional
-    public ResponseDTO<List<IngredientInfoViewResponse>> getIngredientSiseList(IngredientSiseRequest request) {
-
-        List<IngredientInfoViewResponse> data = new ArrayList<>();
-        for (int i = 1; i < request.getCount() + 1; i++) {
-            data.add(IngredientInfoViewResponse.test(i, ""));
+    public List<IngredientInfoViewResponse> getIngredientSiseList(IngredientSiseRequest request) {
+        if(!isValidIngredientRequest(request)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, INGREDIENT_NOT_FOUND.getMessage());
         }
+        //return ingredientRepositoryCustom.ingredientInfoViewResponseList(request)
 
-        return ResponseDTO.from(data);
+        /*
+        * ingredient_id가 다른데 재료 이름이 같은 데이터가 있어서 임시방편으로 마련함.
+        * 데이터가 완전해지면 위의 로직을 실행하면 됨
+        * */
+        List<IngredientInfoViewResponse> list = ingredientRepositoryCustom.ingredientInfoViewResponseList(request);
+        List<IngredientInfoViewResponse> result = new ArrayList<>();
+        Set<String> names = new HashSet<>();
+        int size = request.getCount();
+        for (IngredientInfoViewResponse ingredient : list) {
+            if(result.size()==size) break;
+            if (names.contains(ingredient.getName())) continue;
+            names.add(ingredient.getName());
+            result.add(ingredient);
+        }
+        return result;
     }
 
     @Transactional
@@ -119,12 +150,22 @@ public class IngredientService {
     @Transactional
     public List<RecipeListResponse> getIngredientRecommendRecipe(Integer ingredientId) {
 
+<<<<<<< Updated upstream
         List<RecipeListResponse> data = new ArrayList<>();
         for (int i = 1; i < 3; i++) {
             data.add(RecipeListResponse.of(i));
         }
 
         return data;
+=======
+        Ingredient ingredient = getIngredient(ingredientId);
+
+        List<Recipe> recipes = recipeRepository.findByMaterialsIngredientId(ingredientId);
+
+        List<Recipe> randomRecipes = getRandomRecipes(recipes);
+
+        return convertToRecipeListResponse(randomRecipes);
+>>>>>>> Stashed changes
     }
 
 

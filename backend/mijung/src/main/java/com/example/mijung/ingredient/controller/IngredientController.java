@@ -61,9 +61,9 @@ public class IngredientController {
     @ApiResponse(responseCode = "200", description = "성공")
     public ResponseEntity<ResponseDTO<?>> getIngredientSiseList(@Valid @ModelAttribute IngredientSiseRequest request) {
 
-        ResponseDTO<List<IngredientInfoViewResponse>> result = ingredientService.getIngredientSiseList(request);
+        List<IngredientInfoViewResponse> result = ingredientService.getIngredientSiseList(request);
 
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.from(result));
     }
 
     /**
@@ -133,7 +133,13 @@ public class IngredientController {
 
         List<RecipeListResponse> result = ingredientService.getIngredientRecommendRecipe(ingredientId);
 
+<<<<<<< Updated upstream
         return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.from(result));
+=======
+        HttpStatus status = result.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
+
+        return ResponseEntity.status(status).body(ResponseDTO.from(result));
+>>>>>>> Stashed changes
     }
 
 }
