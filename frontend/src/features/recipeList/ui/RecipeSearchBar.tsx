@@ -84,7 +84,7 @@ export const RecipeSearchBar = ({
   }
 
   return (
-    <div className="relative max-w-40 min-w-96 mx-auto">
+    <div className="relative min-w-96 mx-auto mb-5">
       <form className="flex items-center" onSubmit={(e) => handleSubmit(e)}>
         <input
           type="text"
