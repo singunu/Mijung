@@ -6,7 +6,6 @@ from pyspark.sql.functions import col, explode, udf
 from pyspark.sql.types import StringType, ArrayType
 import findspark
 import logging
-from functools import lru_cache
 
 findspark.init()
 
