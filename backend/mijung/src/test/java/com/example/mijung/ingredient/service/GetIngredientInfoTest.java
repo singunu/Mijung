@@ -6,7 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.example.mijung.ingredient.dto.IngredientInfoViewResponse;
@@ -15,6 +18,11 @@ import com.example.mijung.ingredient.entity.Ingredient;
 import com.example.mijung.ingredient.entity.IngredientInfo;
 import com.example.mijung.ingredient.entity.IngredientRate;
 import com.example.mijung.ingredient.repository.IngredientRepository;
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.EntityPathBase;
+import com.querydsl.jpa.impl.JPAQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +40,9 @@ public class GetIngredientInfoTest {
 
     @Mock
     private IngredientRepository ingredientRepository;
+
+    @Mock
+    private JPAQueryFactory queryFactory;
 
     @InjectMocks
     private IngredientService ingredientService;
@@ -193,4 +204,42 @@ public class GetIngredientInfoTest {
 
         assertTrue(ingredientService.isValidIngredientRequest(ingredientSiseRequest));
     }
+
+    @SuppressWarnings("unchecked")
+    @Test
+    void testIngredientInfoViewResponseList() {
+        // Given
+        IngredientSiseRequest request = new IngredientSiseRequest();
+        request.setPeriod("year");
+        request.setCount(3);
+        request.setChange("positive");
+
+
+        Tuple mockTuple = mock(Tuple.class);
+        Ingredient mockIngredient = mock(Ingredient.class);
+
+        when(mockTuple.get(eq(0), any(Class.class))).thenReturn(mockIngredient);
+        when(mockTuple.get(eq(1), any(Class.class))).thenReturn(1000);
+        when(mockTuple.get(eq(2), any(Class.class))).thenReturn(0.5f);
+        when(mockTuple.get(eq(3), any(Class.class))).thenReturn(50);
+        when(mockTuple.get(eq(4), any(Class.class))).thenReturn(LocalDate.of(2024, 3, 10));
+        when(mockTuple.get(eq(5), any(Class.class))).thenReturn(5.0f);
+
+        JPAQuery<Tuple> mockJpaQuery = mock(JPAQuery.class);
+        when(queryFactory.select(any(), any(), any(), any(), any(), any())).thenReturn(mockJpaQuery);
+        when(mockJpaQuery.from(any(EntityPathBase.class))).thenReturn(mockJpaQuery);
+        when(mockJpaQuery.innerJoin(any(EntityPathBase.class))).thenReturn(mockJpaQuery);
+        when(mockJpaQuery.on(any(Predicate.class))).thenReturn(mockJpaQuery);
+        when(mockJpaQuery.where(any(Predicate.class))).thenReturn(mockJpaQuery);
+        when(mockJpaQuery.fetch()).thenReturn(List.of(mockTuple));
+
+        // When
+        List<IngredientInfoViewResponse> result = ingredientService.getIngredientSiseList(request);
+
+        // Then
+        assertFalse(result.isEmpty());
+        assertEquals(1, result.size());
+        // Add more assertions based on expected values
+    }
+
 }

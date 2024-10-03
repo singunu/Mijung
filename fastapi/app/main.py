@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from app.error.GlobalExceptionHandler import add_exception_handlers
 from app.routes.recommend import router as recommend_router
 from fastapi.middleware.cors import CORSMiddleware
 from app.common.scheduler import start_scheduler
@@ -7,9 +8,9 @@ from app.schemas import Base
 from app.databases.database import engineconn
 from app.models.models import initialize_models
 import logging
-from fastapi import FastAPI, Request, HTTPException
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI
 from app.common.config import settings
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -33,15 +34,8 @@ async def lifespan(app: FastAPI):
         scheduler.shutdown()
 
 app = FastAPI(lifespan=lifespan)
-app.include_router(recommend_router, prefix="/api/v1")
-
-@app.exception_handler(Exception)
-async def global_exception_handler(request: Request, exc: Exception):
-    logger.error(f"Unhandled error: {exc}", exc_info=True)
-    return JSONResponse(
-        status_code=500,
-        content={"message": "An internal server error occurred."}
-    )
+#add_exception_handlers(app)
+app.include_router(recommend_router, prefix="/fastapi/v1")
 
 app.add_middleware(
     CORSMiddleware,
@@ -50,7 +44,3 @@ app.add_middleware(
     allow_methods={"OPTIONS", "GET", "POST"},
     allow_headers={"*"},
 )
-
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}

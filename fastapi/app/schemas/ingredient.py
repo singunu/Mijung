@@ -1,7 +1,12 @@
 # Import necessary modules
+from typing import List
+from fastapi import HTTPException, Query
+from pydantic import BaseModel, Field, field_validator
 from sqlalchemy import Column, Integer, String, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
+
+from app.error.GlobalExceptionHandler import IngredientMessage
 from .base import Base
 
 class Ingredient(Base):
@@ -22,7 +27,7 @@ class Ingredient(Base):
 
     ingredientinfo = relationship("IngredientInfo", back_populates="ingredient") # back_populates는 db 이름이랑 맞아야됨
     ingredientrate = relationship("IngredientRate", back_populates="ingredient") # 앞은 class이름과 같아야됨
-    
+    material = relationship("Material", back_populates="ingredient")
     def __init__(self, id, item_category_code, item_category_name, item_code, item_name,
                  kind_code, kind_name, retail_unit=None, retail_unitsize=None,
                  product_rank_code=None, image=None, is_priced=True):
@@ -47,3 +52,44 @@ class Ingredient(Base):
                 f"category='{self.item_category_name}', "
                 f"kind='{self.kind_name}', "
                 f"price_status={'Priced' if self.is_priced else 'Not Priced'})")
+    
+class IngredientRecommandRequest(BaseModel):
+    ingredients: List[str] = Query(..., description="나의 식탁에 담긴 식재료들")
+    count: int = Query(..., description="response 개수")
+
+    @field_validator('ingredients')
+    def not_empty(cls, v):
+        if not v or all(item.strip() == "" for item in v):
+            raise HTTPException(status_code=400, detail=IngredientMessage.INGREDIENT_NOT_FOUND)
+        return v
+
+class RecommendIngredientListResponse(BaseModel):
+    ingredientId: int
+    name: str
+    
+    model_config = {
+        "from_attributes": True,  # ORM 모델에서 속성을 검사하기 위한 설정
+    }
+
+class RecipeRecommendRequest(BaseModel):
+    ingredients: List[str] = Query(..., description="나의 식탁에 담긴 식재료들")
+    count: int = Query(..., description="response 개수")
+
+    @field_validator('ingredients')
+    def not_empty(cls, v):
+        if not v or all(item.strip() == "" for item in v):
+            raise HTTPException(status_code=400, detail=IngredientMessage.INGREDIENT_NOT_FOUND)
+        return v
+
+class RecipeItem(BaseModel):
+    recipeId: int
+    name: str
+    kind: str
+    image: str
+    
+    model_config = {
+        "from_attributes": True,  # ORM 모델에서 속성을 검사하기 위한 설정
+    }
+
+class RecipeResponse(BaseModel):
+    data: List[RecipeItem]

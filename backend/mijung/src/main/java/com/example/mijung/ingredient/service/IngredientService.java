@@ -16,6 +16,7 @@ import com.example.mijung.ingredient.entity.IngredientPredict;
 import com.example.mijung.ingredient.entity.IngredientRate;
 import com.example.mijung.ingredient.enums.IngredientMassage;
 import com.example.mijung.ingredient.repository.IngredientRepository;
+import com.example.mijung.ingredient.repository.IngredientRepositoryCustom;
 import com.example.mijung.recipe.entity.Recipe;
 import com.example.mijung.recipe.repository.RecipeRepository;
 import jakarta.transaction.Transactional;
@@ -23,6 +24,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -41,6 +43,7 @@ public class IngredientService {
 
     private final IngredientRepository ingredientRepository;
     private final RecipeRepository recipeRepository;
+    private final IngredientRepositoryCustom ingredientRepositoryCustom;
 
     @Transactional
     public ResponseDTO<List<IngredientInfoViewResponse>> getIngredientList(PaginationAndFilteringDto dto) {
@@ -81,14 +84,27 @@ public class IngredientService {
     }
 
     @Transactional
-    public ResponseDTO<List<IngredientInfoViewResponse>> getIngredientSiseList(IngredientSiseRequest request) {
-
-        List<IngredientInfoViewResponse> data = new ArrayList<>();
-        for (int i = 1; i < request.getCount() + 1; i++) {
-            data.add(IngredientInfoViewResponse.test(i, ""));
+    public List<IngredientInfoViewResponse> getIngredientSiseList(IngredientSiseRequest request) {
+        if(!isValidIngredientRequest(request)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, INGREDIENT_NOT_FOUND.getMessage());
         }
+        //return ingredientRepositoryCustom.ingredientInfoViewResponseList(request)
 
-        return ResponseDTO.from(data);
+        /*
+        * ingredient_id가 다른데 재료 이름이 같은 데이터가 있어서 임시방편으로 마련함.
+        * 데이터가 완전해지면 위의 로직을 실행하면 됨
+        * */
+        List<IngredientInfoViewResponse> list = ingredientRepositoryCustom.ingredientInfoViewResponseList(request);
+        List<IngredientInfoViewResponse> result = new ArrayList<>();
+        Set<String> names = new HashSet<>();
+        int size = request.getCount();
+        for (IngredientInfoViewResponse ingredient : list) {
+            if(result.size()==size) break;
+            if (names.contains(ingredient.getName())) continue;
+            names.add(ingredient.getName());
+            result.add(ingredient);
+        }
+        return result;
     }
 
     @Transactional
@@ -131,27 +147,28 @@ public class IngredientService {
 
 
         Map<LocalDate, Integer> predictPriceMap = predictList.stream()
-                .collect(Collectors.toMap(IngredientPredict::getDate, IngredientPredict::getPredictedPrice));
+            .collect(Collectors.toMap(IngredientPredict::getDate, IngredientPredict::getPredictedPrice));
 
         List<IngredientPriceGraphViewResponse> result = infoList.stream()
-                .map(info -> IngredientPriceGraphViewResponse.of(
-                        info.getDate(),
-                        info.getPrice(),
-                        predictPriceMap.getOrDefault(info.getDate(), null)
-                ))
-                .collect(Collectors.toList());
+            .map(info -> IngredientPriceGraphViewResponse.of(
+                info.getDate(),
+                info.getPrice(),
+                predictPriceMap.getOrDefault(info.getDate(), null)
+            ))
+            .collect(Collectors.toList());
 
 
         predictList.stream()
-                .filter(predict -> predict.getDate().isAfter(today))
-                .forEach(predict -> result.add(IngredientPriceGraphViewResponse.of(
-                        predict.getDate(),
-                        null, // 미래 날짜의 실제 가격은 null
-                        predict.getPredictedPrice()
-                )));
+            .filter(predict -> predict.getDate().isAfter(today))
+            .forEach(predict -> result.add(IngredientPriceGraphViewResponse.of(
+                predict.getDate(),
+                null, // 미래 날짜의 실제 가격은 null
+                predict.getPredictedPrice()
+            )));
 
         return result;
     }
+
 
     @Transactional
     public List<RecipeListResponse> getIngredientRecommendRecipe(Integer ingredientId) {
@@ -211,16 +228,20 @@ public class IngredientService {
         return keyword == null ? "" : keyword;
     }
 
-    public boolean isValidIngredientRequest(IngredientSiseRequest ingredientSiseRequest) {
-        if(ingredientSiseRequest == null){
+
+    public Boolean isValidIngredientRequest(IngredientSiseRequest ingredientSiseRequest) {
+        if (ingredientSiseRequest == null) {
             return false;
         }
-        if (ingredientSiseRequest.getPeriod() == null || ingredientSiseRequest.getChange() == null) {
+        if (ingredientSiseRequest.getPeriod() == null
+            || ingredientSiseRequest.getChange() == null) {
             return false;
         }
         // Period 및 Change의 유효성 검사
-        boolean isValidPeriod = Set.of("year", "week", "month").contains(ingredientSiseRequest.getPeriod());
-        boolean isValidChange = Set.of("positive", "negative").contains(ingredientSiseRequest.getChange());
+        boolean isValidPeriod = Set.of("year", "week", "month")
+            .contains(ingredientSiseRequest.getPeriod());
+        boolean isValidChange = Set.of("positive", "negative")
+            .contains(ingredientSiseRequest.getChange());
 
         return isValidPeriod && isValidChange;
     }

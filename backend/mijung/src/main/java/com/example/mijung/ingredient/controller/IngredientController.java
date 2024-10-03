@@ -64,9 +64,9 @@ public class IngredientController {
     @ApiResponse(responseCode = "200", description = "성공")
     public ResponseEntity<ResponseDTO<?>> getIngredientSiseList(@Valid @ModelAttribute IngredientSiseRequest request) {
 
-        ResponseDTO<List<IngredientInfoViewResponse>> result = ingredientService.getIngredientSiseList(request);
+        List<IngredientInfoViewResponse> result = ingredientService.getIngredientSiseList(request);
 
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.from(result));
     }
 
     /**
@@ -135,33 +135,17 @@ public class IngredientController {
     @GetMapping("/{ingredientId}/recommend-recipes")
     @Operation(summary = "식재료 상세보기 - 추천 레시피", description = "레시피 정보를 포함하는 ResponseEntity 객체를 반환합니다. 식재료 상세보기(추천 레시피)에 실패하면 에러 코드를 담은 ResponseEntity를 반환합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "식재료 상세보기(추천 레시피) 조회 성공"),
-            @ApiResponse(responseCode = "204", description = "식재료 상세보기(추천 레시피) 조회 성공 - 추천 레시피가 없는 경우", content = @Content),
-            @ApiResponse(responseCode = "404", description = "식재료 상세보기(추천 레시피) 조회 실패", content = @Content)
+        @ApiResponse(responseCode = "200", description = "식재료 상세보기(추천 레시피) 조회 성공"),
+        @ApiResponse(responseCode = "204", description = "식재료 상세보기(추천 레시피) 조회 성공 - 추천 레시피가 없는 경우", content = @Content),
+        @ApiResponse(responseCode = "404", description = "식재료 상세보기(추천 레시피) 조회 실패", content = @Content)
     })
     public ResponseEntity<ResponseDTO<List<RecipeListResponse>>> getIngredientRecommendRecipe(
-            @PathVariable("ingredientId") @Schema(description = "식재료 ID", example = "1") Integer ingredientId) {
+        @PathVariable("ingredientId") @Schema(description = "식재료 ID", example = "1") Integer ingredientId) {
 
         List<RecipeListResponse> result = ingredientService.getIngredientRecommendRecipe(ingredientId);
 
         HttpStatus status = result.isEmpty() ? HttpStatus.NO_CONTENT : HttpStatus.OK;
 
         return ResponseEntity.status(status).body(ResponseDTO.from(result));
-    }
-    /*
-    * 메인 페이지 - 식재료 시세 조회
-    *
-    * @Param period(year, month, week), change(positive, negative), count
-    * @Return 식재료 정보와 가격, 변동률 정보를 포함하는 ResponseEntity 객체를 반환합니다.
-    * */
-
-    @GetMapping("/price")
-    @Operation(
-        summary ="메인 페이지 - 재료 가격 현황", description = "식재료 정보와 가격, 변동률 정보를 포함하는 ResponseEntity 객체를 반환합니다, "
-    )
-    @ApiResponse(responseCode = "200", description = "성공")
-    public ResponseEntity<ResponseDTO<?>> getIngredientPrice(@Valid @ModelAttribute IngredientSiseRequest ingredientSiseRequest) {
-        List<IngredientInfoViewResponse> result = ingredientService.getIngredientPrice(ingredientSiseRequest);
-        return ResponseEntity.status(HttpStatus.OK).body(ResponseDTO.from(result));
     }
 }
