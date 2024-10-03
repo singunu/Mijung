@@ -1,5 +1,6 @@
 package com.example.mijung.recipe.dto;
 
+import com.example.mijung.recipe.entity.Etc;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -18,6 +19,15 @@ public class EtcDto {
                 .name("냄비")
                 .capacity("")
                 .type("조리도구")
+                .build();
+    }
+
+    public static EtcDto of(Etc etc) {
+        return EtcDto.builder()
+                .etcId(etc.getId())
+                .name(etc.getName())
+                .capacity(etc.getCapacity())
+                .type(etc.getType())
                 .build();
     }
 }

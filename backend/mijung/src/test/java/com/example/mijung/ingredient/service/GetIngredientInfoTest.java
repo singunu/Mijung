@@ -1,20 +1,19 @@
 package com.example.mijung.ingredient.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-<<<<<<< Updated upstream
-=======
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
->>>>>>> Stashed changes
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.example.mijung.ingredient.dto.IngredientInfoViewResponse;
+import com.example.mijung.ingredient.dto.IngredientSiseRequest;
 import com.example.mijung.ingredient.entity.Ingredient;
 import com.example.mijung.ingredient.entity.IngredientInfo;
 import com.example.mijung.ingredient.entity.IngredientRate;
@@ -136,8 +135,6 @@ public class GetIngredientInfoTest {
         // When & Then
         assertThrows(ResponseStatusException.class, () -> ingredientService.getIngredientInfo(nonExistentId));
     }
-<<<<<<< Updated upstream
-=======
 
     @Test
     @DisplayName("메인 정보 조회 테스트 period or change가 null인 경우 : 실패")
@@ -244,5 +241,4 @@ public class GetIngredientInfoTest {
         assertEquals(1, result.size());
         // Add more assertions based on expected values
     }
->>>>>>> Stashed changes
 }

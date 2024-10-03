@@ -1,5 +1,6 @@
 package com.example.mijung.recipe.dto;
 
+import com.example.mijung.material.entity.Material;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -20,6 +21,15 @@ public class MaterialDto {
                 .capacity("1개")
                 .type("재료")
                 .ingredientId(ingredientId)
+                .build();
+    }
+    public static MaterialDto of(Material material) {
+        return MaterialDto.builder()
+                .materialId(material.getId())
+                .name(material.getName())
+                .capacity(material.getCapacity())
+                .type(material.getType())
+                .ingredientId(material.getIngredient().getId())
                 .build();
     }
 }

@@ -1,47 +1,30 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import SideLayout from '../../app/RoutingLayout/SideLayout';
+import LeftSideLayout from '../../app/RoutingLayout/LeftSideLayout';
 import MainLayout from '../../app/RoutingLayout/MainLayout';
+import RightSideLayout from '../../app/RoutingLayout/RightSideLayout';
 import Searchbar from '../../widgets/Searchbar/Searchbar';
 import IngredientCard from '../../widgets/IngredientCard/IngredientCard';
 import PriceGraphCard from '../../widgets/PriceGraphCard/PriceGraphCard';
 import NetworkGraphCard from '../../widgets/NetworkGraphCard/NetworkGraphCard';
-import { getIngredientInfo, IngredientInfo } from './IngredientDetailAPI';
+import { useIngredientInfo } from '../../features/ingredient/api/useIngredients';
 
 const IngredientDetailPage = () => {
   const { id } = useParams<{ id: string }>();
-  const [ingredient, setIngredient] = useState<IngredientInfo | null>(null);
   const navigate = useNavigate();
+  const { data: ingredient, isLoading, error } = useIngredientInfo(Number(id));
 
   const handleSearch = (keyword: string) => {
     // 검색 결과 페이지로 이동
     navigate(`/search/ingredients?keyword=${encodeURIComponent(keyword)}`);
   };
 
-  useEffect(() => {
-    const fetchIngredientInfo = async () => {
-      try {
-        if (id) {
-          const data = await getIngredientInfo(Number(id));
-          setIngredient(data);
-          console.log('data is', data);
-          console.log('ingredient is', ingredient);
-        }
-      } catch (error) {
-        console.error('식재료 정보를 가져오는 데 실패했습니다:', error);
-      }
-    };
-
-    fetchIngredientInfo();
-  }, [id]);
-
-  if (!ingredient) {
-    return <div>로딩 중...</div>;
-  }
+  if (isLoading) return <div>로딩 중...</div>;
+  if (error) return <div>에러가 발생했습니다.</div>;
+  if (!ingredient) return <div>식재료 정보가 없습니다.</div>;
 
   return (
     <div className="grid grid-cols-10">
-      <SideLayout />
+      <LeftSideLayout />
       <MainLayout>
         <Searchbar type="ingredients" onSearch={handleSearch} />
         <div className="container mx-auto px-4 py-8">
@@ -50,30 +33,19 @@ const IngredientDetailPage = () => {
           </h1>
           <div className="flex flex-col lg:flex-row gap-8">
             <div className="lg:w-1/4">
-              <IngredientCard
-                ingredientId={ingredient.ingredientId}
-                name={ingredient.name}
-                unit={ingredient.retailUnit}
-                unitSize={ingredient.retailUnitsize}
-                image={ingredient.image}
-                price={ingredient.price}
-                changeRate={ingredient.changeRate}
-                changePrice={ingredient.changePrice}
-                width="100%"
-                height={300}
-              />
+              <IngredientCard ingredient={ingredient} />
             </div>
             <div className="lg:w-3/4 flex flex-col gap-8">
               <PriceGraphCard
-                graphId={ingredient.ingredientId}
-                title={`${ingredient.name} 가격 추이`}
-                width="100%"
+                graphId={ingredient.ingredientId ?? 0}
+                title={`${ingredient.name ?? '알 수 없음'} 가격 추이`}
+                width={500}
                 height={200}
               />
               <NetworkGraphCard
-                graphId={ingredient.ingredientId}
-                title={`${ingredient.name} 관련 네트워크`}
-                width="100%"
+                graphId={ingredient.ingredientId ?? 0}
+                title={`${ingredient.name ?? '알 수 없음'} 관련 네트워크`}
+                width={500}
                 height={200}
               />
             </div>
@@ -84,7 +56,7 @@ const IngredientDetailPage = () => {
           </div>
         </div>
       </MainLayout>
-      <SideLayout />
+      <RightSideLayout />
     </div>
   );
 };

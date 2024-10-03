@@ -1,86 +1,51 @@
-import { useState, useEffect } from 'react';
-import SideLayout from '../../app/RoutingLayout/SideLayout';
+import LeftSideLayout from '../../app/RoutingLayout/LeftSideLayout';
 import MainLayout from '../../app/RoutingLayout/MainLayout';
-import IngredientCard from '../../widgets/IngredientCard/IngredientCard';
-import { getIngredientPrices, IngredientPrice } from './MainAPI';
+import RightSideLayout from '../../app/RoutingLayout/RightSideLayout';
+import { IngredientSiseList } from '@/features/ingredient/ui/IngredientSiseList';
+import { useIngredientSise } from '@/features/ingredient/api/useIngredients';
 
 const MainPage = () => {
-  const [weeklyIngredients, setWeeklyIngredients] = useState<IngredientPrice[]>(
-    []
+  const { data: weeklyIngredients, isError: isWeeklyError } = useIngredientSise(
+    { period: 'week', change: 'positive', count: 6 }
   );
-  const [monthlyIngredients, setMonthlyIngredients] = useState<
-    IngredientPrice[]
-  >([]);
-  const [mainIngredients, setMainIngredients] = useState<IngredientPrice[]>([]);
+  const { data: monthlyIngredients, isError: isMonthlyError } =
+    useIngredientSise({ period: 'month', change: 'positive', count: 4 });
+  const { data: mainIngredients, isError: isMainError } = useIngredientSise({
+    period: 'year',
+    change: 'positive',
+    count: 4,
+  });
 
-  useEffect(() => {
-    const fetchIngredients = async () => {
-      try {
-        const [weekly, monthly, main] = await Promise.all([
-          getIngredientPrices({ period: 'week', change: 'positive', count: 6 }),
-          getIngredientPrices({
-            period: 'month',
-            change: 'positive',
-            count: 4,
-          }),
-          getIngredientPrices({ period: 'year', change: 'positive', count: 4 }),
-        ]);
+  console.log('주간 시세:', weeklyIngredients);
+  console.log('월간 시세:', monthlyIngredients);
+  console.log('주요 식재료:', mainIngredients);
 
-        setWeeklyIngredients(weekly);
-        setMonthlyIngredients(monthly);
-        setMainIngredients(main);
-      } catch (error) {
-        console.error('식재료 데이터 가져오기 실패:', error);
-      }
-    };
-
-    fetchIngredients();
-  }, []);
-
-  const renderIngredientCards = (ingredients: IngredientPrice[]) => (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      {ingredients.map((ingredient) => (
-        <IngredientCard
-          key={ingredient.ingredientId}
-          ingredientId={ingredient.ingredientId}
-          name={ingredient.name}
-          unit={ingredient.retailUnit}
-          unitSize={ingredient.retailUnitsize}
-          image={ingredient.image}
-          price={ingredient.price}
-          changeRate={ingredient.changeRate}
-          changePrice={ingredient.changePrice}
-          width={170}
-          height={250}
-        />
-      ))}
-    </div>
-  );
+  if (isWeeklyError || isMonthlyError || isMainError) {
+    console.error('데이터 로딩 오류');
+    return <div>데이터를 불러오는 중 오류가 발생했습니다.</div>;
+  }
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-10">
-      <SideLayout />
+      <LeftSideLayout />
       <MainLayout>
         <div className="container mx-auto px-4 py-8">
           <h1 className="text-3xl font-bold mb-6">메인 페이지</h1>
-
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">주간 시세</h2>
-            {renderIngredientCards(weeklyIngredients)}
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">월간 시세</h2>
-            {renderIngredientCards(monthlyIngredients)}
-          </section>
-
-          <section className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">주요 식재료</h2>
-            {renderIngredientCards(mainIngredients)}
-          </section>
+          <IngredientSiseList
+            ingredients={weeklyIngredients ?? []}
+            title="주간 시세"
+          />
+          <IngredientSiseList
+            ingredients={monthlyIngredients ?? []}
+            title="월간 시세"
+          />
+          <IngredientSiseList
+            ingredients={mainIngredients ?? []}
+            title="주요 식재료"
+          />
         </div>
       </MainLayout>
-      <SideLayout />
+      <RightSideLayout />
     </div>
   );
 };
