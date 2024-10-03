@@ -1,8 +1,7 @@
 import { useRecipeList } from '../api/useRecipeList';
 import { useEffect, useState } from 'react';
 import { Error } from '@/shared/components';
-import { useNavigate } from 'react-router-dom';
-import RecipeCardStack from '@/widgets/RecipeCard/RecipeCardStack';
+import { RecipeCardStack } from '@/widgets/RecipeCard/RecipeCardStack';
 import { RxReload } from 'react-icons/rx';
 import { motion } from 'framer-motion';
 
@@ -14,7 +13,6 @@ export const RecipeList = ({ keyword }: Props) => {
   const [page, setPage] = useState<number>(1);
   const [rotation, setRotation] = useState<number>(0);
   const { data, isFetching, error } = useRecipeList({ page, keyword });
-  const navigate = useNavigate();
 
   // keyword 변경 시 페이지 1로 초기화
   useEffect(() => {
@@ -33,39 +31,22 @@ export const RecipeList = ({ keyword }: Props) => {
     }
   };
 
-  const handleRecipeClick = (recipeId: number) => {
-    navigate(`/recipes/${recipeId}`);
-  };
-
   return (
-    <div className="relative w-full h-full">
-      {data?.recipes.length === 0 ? (
-        <div>데이터가 없습니다.</div>
-      ) : (
-        <>
-          {/* <ul>
-            {data?.recipes.map((recipe) => (
-              <li
-                key={recipe.recipeId}
-                onClick={() => handleRecipeClick(recipe.recipeId)}
-                className="cursor-pointer p-2 rounded-md transition-colors duration-200 ease-in-out hover:bg-blue-100"
-              >
-                {recipe.name} - {recipe.kind}
-              </li>
-            ))}
-          </ul> */}
-          <RecipeCardStack />
-        </>
-      )}
-      {isFetching ? <span>Loading...</span> : null}
+    <div className="relative w-full h-3/4">
       <motion.button
         onClick={handleNextPage}
-        className="absolute right-20 text-5xl"
+        className="absolute z-10 top-5 end-20 text-4xl"
         animate={{ rotate: rotation }}
         transition={{ duration: 0.5, ease: 'easeInOut' }}
       >
         <RxReload />
       </motion.button>
+      {data?.recipes.length === 0 ? (
+        <div>데이터가 없습니다.</div>
+      ) : (
+        <>{data?.recipes && <RecipeCardStack recipes={data.recipes} />}</>
+      )}
+      {isFetching ? <span>Loading...</span> : null}
     </div>
   );
 };
