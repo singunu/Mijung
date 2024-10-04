@@ -46,7 +46,7 @@ export const RecipeDetailPage = () => {
                   className="w-full h-full flex items-center justify-center"
                   dangerouslySetInnerHTML={{ __html: qrCode }}
                   style={{
-                    '& svg': {
+                    ['& svg' as string]: {
                       width: '100%',
                       height: '100%',
                       objectFit: 'contain',
