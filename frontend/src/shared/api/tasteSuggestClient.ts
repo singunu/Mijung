@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseURL = import.meta.env.VITE_APP_PRODUCT_URL;
+const baseURL = import.meta.env.VITE_PROD_FAST_API_URL;
 
 export default class TasteSuggestClient {
   async getRecommendedIngredients(ingredients: number[]) {
