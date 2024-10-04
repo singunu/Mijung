@@ -148,6 +148,4 @@ public class IngredientController {
 
         return ResponseEntity.status(status).body(ResponseDTO.from(result));
     }
-
-
 }

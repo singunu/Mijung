@@ -16,9 +16,6 @@ import com.example.mijung.ingredient.entity.IngredientPredict;
 import com.example.mijung.ingredient.entity.IngredientRate;
 import com.example.mijung.ingredient.enums.IngredientMassage;
 import com.example.mijung.ingredient.repository.IngredientRepository;
-import jakarta.transaction.Transactional;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import com.example.mijung.ingredient.repository.IngredientRepositoryCustom;
 import com.example.mijung.recipe.entity.Recipe;
 import com.example.mijung.recipe.repository.RecipeRepository;
@@ -30,13 +27,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Set;
-import com.example.mijung.recipe.dto.RecipeSearchResponse;
-import com.example.mijung.recipe.entity.Recipe;
-import com.example.mijung.recipe.repository.RecipeRepository;
-import jakarta.transaction.Transactional;
-import java.time.LocalDate;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -191,6 +182,19 @@ public class IngredientService {
         return convertToRecipeListResponse(randomRecipes);
     }
 
+    public List<IngredientInfoViewResponse> getIngredientPrice(IngredientSiseRequest ingredientSiseRequest) {
+        if(!isValidIngredientRequest(ingredientSiseRequest)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, INGREDIENT_NOT_FOUND.getMessage());
+        }
+
+        String period = ingredientSiseRequest.getPeriod();
+        String change = ingredientSiseRequest.getChange();
+
+
+        return null;
+    }
+
+
     public Ingredient getIngredient(Integer ingredientId) {
         return ingredientRepository.findById(ingredientId)
                 .orElseThrow(
@@ -224,16 +228,21 @@ public class IngredientService {
         return keyword == null ? "" : keyword;
     }
 
+
     public Boolean isValidIngredientRequest(IngredientSiseRequest ingredientSiseRequest) {
-        if(ingredientSiseRequest.getPeriod() == null || ingredientSiseRequest.getChange() == null){
+        if (ingredientSiseRequest == null) {
             return false;
         }
-        if(!Set.of("year", "week", "month").contains(ingredientSiseRequest.getPeriod())){
+        if (ingredientSiseRequest.getPeriod() == null
+            || ingredientSiseRequest.getChange() == null) {
             return false;
         }
-        if(!Set.of("positive", "negative").contains(ingredientSiseRequest.getChange())){
-            return false;
-        }
-        return true;
+        // Period 및 Change의 유효성 검사
+        boolean isValidPeriod = Set.of("year", "week", "month")
+            .contains(ingredientSiseRequest.getPeriod());
+        boolean isValidChange = Set.of("positive", "negative")
+            .contains(ingredientSiseRequest.getChange());
+
+        return isValidPeriod && isValidChange;
     }
 }

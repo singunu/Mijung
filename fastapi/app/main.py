@@ -8,6 +8,9 @@ from app.schemas import Base
 from app.databases.database import engineconn
 from app.models.models import initialize_models
 import logging
+from fastapi import FastAPI
+from app.common.config import settings
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -36,7 +39,7 @@ app.include_router(recommend_router, prefix="/fastapi/v1")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins={"*"},
+    allow_origins=[settings.CORS_ORIGIN],
     allow_credentials=True,
     allow_methods={"OPTIONS", "GET", "POST"},
     allow_headers={"*"},

@@ -12,7 +12,7 @@ class Settings():
   DB_PORT = int(os.environ.get("MYSQL_PORT"))
   KAMIS_KEY = os.environ.get("KAMIS_KEY")
   KAMIS_ID = os.environ.get("KAMIS_ID")
-
+  CORS_ORIGIN = os.environ.get("CORS_URL")
 @lru_cache
 def get_settings():
     return Settings()
