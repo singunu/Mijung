@@ -1,7 +1,7 @@
 import { useSearchSuggestion } from '../api/useSearchSuggestion';
 import { Recipe } from '@/shared/api/recipeTypes';
 import { Error } from '@/shared/components';
-import { KeyboardEvent, useEffect, useState } from 'react';
+import { KeyboardEvent, useEffect, useRef, useState } from 'react';
 
 interface Props {
   keyword: string;
@@ -17,6 +17,7 @@ export const RecipeSearchBar = ({
   const { data: suggestions, error } = useSearchSuggestion(keyword);
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
+  const searchBarRef = useRef<HTMLDivElement>(null);
 
   const handleSuggestionClick = (suggestion: Recipe) => {
     onSubmit(suggestion.name);
@@ -74,6 +75,23 @@ export const RecipeSearchBar = ({
     setShowSuggestions(!!suggestions && suggestions.length > 0);
   }, [suggestions]);
 
+  // searchBar 외부 요소(형제, 부모) 클릭 시 ul 숨김
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchBarRef.current &&
+        !searchBarRef.current.contains(event.target as Node)
+      ) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
   const handleInputFocus = () => {
     setShowSuggestions(!!suggestions && suggestions.length > 0);
   };
@@ -84,7 +102,7 @@ export const RecipeSearchBar = ({
   }
 
   return (
-    <div className="relative min-w-96 mx-auto mb-5">
+    <div className="relative min-w-96 mx-auto mb-5" ref={searchBarRef}>
       <form className="flex items-center" onSubmit={(e) => handleSubmit(e)}>
         <input
           type="text"
