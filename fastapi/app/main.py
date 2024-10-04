@@ -34,13 +34,14 @@ async def lifespan(app: FastAPI):
         scheduler.shutdown()
 
 app = FastAPI(lifespan=lifespan)
-#add_exception_handlers(app)
+
 app.include_router(recommend_router, prefix="/fastapi/v1")
+origins = settings.CORS_ORIGIN.split(', ')
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.CORS_ORIGIN],
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods={"OPTIONS", "GET", "POST"},
-    allow_headers={"*"},
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
