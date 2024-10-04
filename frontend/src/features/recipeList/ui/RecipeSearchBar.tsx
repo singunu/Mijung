@@ -21,6 +21,7 @@ export const RecipeSearchBar = ({
 
   const handleSuggestionClick = (suggestion: Recipe) => {
     onSubmit(suggestion.name);
+    onKeywordChange(suggestion.name);
     setShowSuggestions(false);
   };
 
@@ -59,6 +60,7 @@ export const RecipeSearchBar = ({
       case 'Enter':
         if (selectedIndex !== -1) {
           onSubmit(suggestions[selectedIndex].name);
+          onKeywordChange(suggestions[selectedIndex].name);
           setShowSuggestions(false);
           e.preventDefault();
         }
